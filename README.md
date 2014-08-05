@@ -1,4 +1,4 @@
 cleanfreak
 ==========
 
-Sanity checks and grades for cg production.
+Sanity checks and grades for CG production.

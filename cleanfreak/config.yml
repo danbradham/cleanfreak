@@ -1,0 +1,11 @@
+maya:
+    model:
+        check_references: cleanfreak.cleaners.check_references
+        check_intermediates: cleanfreak.cleaners.check_intermediates
+        check_uvs: cleanfreak.cleanears.check_uvs
+        check_shaders: cleanfreak.cleanears.check_shaders
+        check_in_group: cleanfreak.cleanears.check_in_group
+    animate:
+        check_timewarp: cleanfreak.cleaners.check_timewarp
+    light:
+        check_project: cleanfreak.cleaners.check_project
