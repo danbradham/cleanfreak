@@ -65,7 +65,9 @@ class E(Cleaner):
         print "E Setup"
 
     def check(self):
-        return True, "E Check: SUCCESS!"
+        if self.cleaned:
+            return True, "E Check: SUCCESS!"
+        return False, "E Check: FAIL!"
 
     def clean(self):
         return True, "E Clean: CLEANED!"

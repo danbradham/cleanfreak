@@ -10,4 +10,4 @@ CONTEXTS = {
 
 def get(context):
     global CONTEXTS
-    return CONTEXTS.get(context, "default")
+    return CONTEXTS.get(context, CONTEXTS.get("default"))

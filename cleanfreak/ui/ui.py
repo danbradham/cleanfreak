@@ -2,6 +2,9 @@
 PySide UI
 =========
 '''
+from PySide import QtGui
+import sys
+
 
 
 class UI(QtGui.QDockWidget):
@@ -21,4 +24,7 @@ class UI(QtGui.QDockWidget):
     @classmethod
     def create(cls, app):
         '''Overwrite in custom application context passing parent ui.'''
-        return cls(app, parent=None)
+        qtapp = QtGui.QApplication(sys.argv)
+        ui = cls(app, parent=None)
+        ui.show()
+        sys.exit(qtapp.exec_())
