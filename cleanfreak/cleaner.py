@@ -8,23 +8,22 @@ ABC = ABCMeta(str("ABC"), (), {}) # 2n3 compatible metaclassing
 
 class Cleaner(ABC):
 
-    name = None
     description = None
+
+    def __init__(self):
+        self.passed = None
+        self.cleaned = False
+        self.msg = None
 
     def _check(self):
         self.setup()
-        try:
-            self.passed, self.msg = self.check()
-            return self.passed, self.msg
-        except:
-            return False, sys.exc_info()[2]
+        self.passed, self.msg = self.check()
+        return self.passed, self.msg
 
     def _clean(self):
-        try:
-            self.clean()
-            return True, "Cleaned it up!"
-        except:
-            return False, sys.exc_info()[2]
+        if not self.passed:
+            self.cleaned, self.msg = self.clean()
+            return self.cleaned, self.msg
 
     @abstractmethod
     def setup(self):
@@ -69,18 +68,3 @@ class Cleaner(ABC):
             for node in self.no_uvs:
                 automatic_map(node)
         '''
-
-
-def get_cleaners(mod_path):
-    '''Return module from dotted path'''
-    m = import_module(mod_path)
-    all_cleaners = Cleaner.__subclasses__()
-
-    cleaners = {}
-
-    for name in dir(m):
-        obj = getattr(m, name)
-        if obj in all_cleaners:
-            cleaners[name] = obj
-
-    return cleaners
