@@ -1,8 +1,9 @@
 import sys
 from abc import ABCMeta, abstractmethod
+from .utils import import_module
 
 
-ABC = MetaMsg(str("ABC"), (), {}) # 2n3 compatible metaclass
+ABC = ABCMeta(str("ABC"), (), {}) # 2n3 compatible metaclassing
 
 
 class Cleaner(ABC):
@@ -68,3 +69,18 @@ class Cleaner(ABC):
             for node in self.no_uvs:
                 automatic_map(node)
         '''
+
+
+def get_cleaners(mod_path):
+    '''Return module from dotted path'''
+    m = import_module(mod_path)
+    all_cleaners = Cleaner.__subclasses__()
+
+    cleaners = {}
+
+    for name in dir(m):
+        obj = getattr(m, name)
+        if obj in all_cleaners:
+            cleaners[name] = obj
+
+    return cleaners
