@@ -9,9 +9,11 @@ class A(Cleaner):
         print "A Setup"
 
     def check(self):
+        print "A Check"
         return True, "A Check: SUCCESS!"
 
     def clean(self):
+        print "A Clean"
         return True, "A Clean: CLEANED!"
 
 

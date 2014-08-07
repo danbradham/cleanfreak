@@ -3,11 +3,11 @@ from .maya import MayaUI
 
 
 CONTEXTS = {
-    "default": UI,
-    "maya": MayaUI,
+    "DEFAULT": UI,
+    "MAYA": MayaUI,
 }
 
 
 def get(context):
     global CONTEXTS
-    return CONTEXTS.get(context, CONTEXTS.get("default"))
+    return CONTEXTS.get(context.upper(), CONTEXTS.get("DEFAULT"))

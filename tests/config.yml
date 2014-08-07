@@ -1,27 +1,18 @@
-app_a:
-    stage_a:
-        A: tests.cleaners
-        B: tests.cleaners
-        C: tests.cleaners
-        D: tests.cleaners
-        E: tests.cleaners
-    stage_b:
-        B: tests.cleaners
-        D: tests.cleaners
-    stage_c:
-        A: tests.cleaners
-        C: tests.cleaners
-        E: tests.cleaners
-app_b:
-    stage_a:
-        A: tests.cleaners
-        D: tests.cleaners
-        E: tests.cleaners
-    stage_b:
-        B: tests.cleaners
-        D: tests.cleaners
-        E: tests.cleaners
-    stage_c:
-        A: tests.cleaners
-        B: tests.cleaners
-        C: tests.cleaners
+CONTEXT: MAYA
+UI_CONTEXT: DEFAULT
+SUITES:
+    MODEL: &MODEL
+        - tests.cleaners.A
+        - tests.cleaners.C
+        - tests.cleaners.E
+        - tests.cleaners.D
+        - tests.cleaners.B
+    RIG: &RIG
+        - tests.cleaners.A
+        - tests.cleaners.C
+        - tests.cleaners.E
+    LIGHT: &LIGHT
+        - tests.cleaners.E
+        - tests.cleaners.D
+        - tests.cleaners.B
+    DEFAULT: *LIGHT

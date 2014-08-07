@@ -10,12 +10,17 @@ def import_module(name):
 
 def get_cleaner(name, mod_path):
     '''Return module from dotted path'''
-    from .cleaner import Cleaner
-    import_module(mod_path)
-    all_cleaners = Cleaner.__subclasses__()
+    from cleanfreak.cleaner import Cleaner
 
-    for cleaner in all_cleaners:
-        if cleaner.__name__ == name:
-            return cleaner
+    m = sys.modules.get(mod_path, import_module(mod_path))
 
-    raise ImportError("Cleaner {0} not found in {1}!".format(name, mod_path))
+    try:
+        c = getattr(m, name)
+    except AttributeError:
+        raise AttributeError(
+            "Cleaner {0} not found in {1}!".format(name, mod_path))
+
+    if issubclass(c, Cleaner):
+        return c
+
+    raise TypeError("Cleaners must be a subclass of cleaner: {0}".format(c))

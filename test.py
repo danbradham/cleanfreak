@@ -1,7 +1,6 @@
 from cleanfreak import CleanFreak
 
 app = CleanFreak("tests/config.yml")
-app.set_context("app_b", "stage_a")
 
 print "Checking all"
 app.check()
@@ -14,4 +13,12 @@ print "Rechecking all"
 app.check()
 print app.format_grade()
 
-app.create_ui()
+print app.cleaners
+
+print app.list_suites()
+
+app.set_suite(app.list_suites()[1])
+
+print app.cleaners
+
+#app.show()
