@@ -1,6 +1,4 @@
-import sys
 from abc import ABCMeta, abstractmethod
-from .utils import import_module
 
 
 ABC = ABCMeta(str("ABC"), (), {}) # 2n3 compatible metaclassing
@@ -8,6 +6,7 @@ ABC = ABCMeta(str("ABC"), (), {}) # 2n3 compatible metaclassing
 
 class Cleaner(ABC):
 
+    full_name = None
     description = None
 
     def __init__(self):
@@ -67,4 +66,6 @@ class Cleaner(ABC):
 
             for node in self.no_uvs:
                 automatic_map(node)
+
+            return True, self.msg
         '''

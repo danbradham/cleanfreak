@@ -1,8 +1,9 @@
 from cleanfreak.cleaner import Cleaner
-
+import time
 
 class A(Cleaner):
 
+    full_name = "Cleaner A"
     description = "My awesome cleaner A!"
 
     def setup(self):
@@ -10,6 +11,7 @@ class A(Cleaner):
 
     def check(self):
         print "A Check"
+        time.sleep(1)
         return True, "A Check: SUCCESS!"
 
     def clean(self):
@@ -19,12 +21,14 @@ class A(Cleaner):
 
 class B(Cleaner):
 
+    full_name = "Cleaner B"
     description = "My awesome cleaner B!"
 
     def setup(self):
         print "B Setup"
 
     def check(self):
+        time.sleep(2)
         return True, "B Check: SUCCESS!"
 
     def clean(self):
@@ -33,12 +37,15 @@ class B(Cleaner):
 
 class C(Cleaner):
 
+    full_name = "Cleaner C"
     description = "My awesome cleaner C!"
 
     def setup(self):
+
         print "C Setup"
 
     def check(self):
+        time.sleep(3)
         return False, "C Check: FAIL!"
 
     def clean(self):
@@ -47,12 +54,14 @@ class C(Cleaner):
 
 class D(Cleaner):
 
+    full_name = "Cleaner D"
     description = "My awesome cleaner D!"
 
     def setup(self):
         print "D Setup"
 
     def check(self):
+        time.sleep(0.2)
         return True, "D Check: SUCCESS!"
 
     def clean(self):
@@ -61,6 +70,7 @@ class D(Cleaner):
 
 class E(Cleaner):
 
+    full_name = "Cleaner E"
     description = "My awesome cleaner E!"
 
     def setup(self):
@@ -77,12 +87,14 @@ class E(Cleaner):
 
 class F(Cleaner):
 
+    full_name = "Cleaner F"
     description = "My awesome cleaner F!"
 
     def setup(self):
         print "F Setup"
 
     def check(self):
+        time.sleep(1)
         return False, "F Check: FAIL!"
 
     def clean(self):

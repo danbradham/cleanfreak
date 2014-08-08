@@ -18,6 +18,7 @@ class CleanFreak(object):
         self.cleaners = None
         self.suite = None
         self.cleaner_count = 0
+        self.ui = None
         if "DEFAULT" in self.config.get("SUITES", []):
             self.set_suite("DEFAULT")
 
@@ -53,6 +54,8 @@ class CleanFreak(object):
 
     def show(self):
         '''Pulls in a ui context and creates the ui.'''
-        from . import ui
-        UI = ui.get(self.config["UI_CONTEXT"])
-        self.ui = UI.create(self)
+        if not self.ui:
+            from . import ui
+            UI = ui.get(self.config["UI_CONTEXT"])
+            self.ui = UI.create(self)
+        self.ui.show()

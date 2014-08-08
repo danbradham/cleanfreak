@@ -15,4 +15,4 @@ SUITES:
         - tests.cleaners.E
         - tests.cleaners.D
         - tests.cleaners.B
-    DEFAULT: *LIGHT
+    DEFAULT: *MODEL
