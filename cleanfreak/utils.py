@@ -1,4 +1,5 @@
 import sys
+import os
 
 
 def import_module(name):
@@ -24,3 +25,15 @@ def get_cleaner(name, mod_path):
         return c
 
     raise TypeError("Cleaners must be a subclass of cleaner: {0}".format(c))
+
+
+def collect(suite):
+    cleaners = []
+
+    for mod_path in suite:
+        mod_path, name = os.path.splitext(mod_path)
+        name = name.lstrip(".")
+        c = get_cleaner(name, mod_path)()
+        cleaners.append(c)
+
+    return cleaners

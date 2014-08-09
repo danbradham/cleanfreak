@@ -3,10 +3,21 @@ UI_CONTEXT: DEFAULT
 SUITES:
     MODEL: &MODEL
         - tests.cleaners.A
-        - tests.cleaners.C
-        - tests.cleaners.E
-        - tests.cleaners.D
         - tests.cleaners.B
+        - tests.cleaners.C
+        - tests.cleaners.D
+        - tests.cleaners.E
+        - tests.cleaners.F
+        - tests.cleaners.G
+        - tests.cleaners.H
+        - tests.cleaners.I
+        - tests.cleaners.J
+    SHADE: &SHADE
+        - tests.cleaners.A
+        - tests.cleaners.B
+        - tests.cleaners.D
+        - tests.cleaners.H
+        - tests.cleaners.J
     RIG: &RIG
         - tests.cleaners.A
         - tests.cleaners.C
@@ -15,4 +26,34 @@ SUITES:
         - tests.cleaners.E
         - tests.cleaners.D
         - tests.cleaners.B
-    DEFAULT: *MODEL
+    DEFAULT: *SHADE
+GRADES:
+    FAILURE:
+        COLOR: [242, 86, 86]
+        MESSAGES:
+            - 'You and everyone around you are complete failures...'
+    TERRIBLE:
+        COLOR: [242, 86, 86]
+        MESSAGES:
+            - 'Not good my friend, not good.'
+    BAD:
+        COLOR: [243, 156, 85]
+        MESSAGES:
+            - 'Come on now.'
+    NOT GOOD:
+        COLOR: [243, 156, 85]
+        MESSAGES:
+            - 'Not bad, but, certainly not good.'
+    SO SO:
+        COLOR: [242, 229, 88]
+        MESSAGES:
+            - 'Alright, alright.'
+    SOLID:
+        COLOR: [145, 243, 85]
+        MESSAGES:
+            - 'Pretty great work buddy!'
+    PERFECT:
+        COLOR: [85, 141, 243]
+        MESSAGES:
+            - 'You are so good at whatever you did!'
+    ORD: [FAILURE, TERRIBLE, BAD, NOT GOOD, SO SO, SOLID, PERFECT]

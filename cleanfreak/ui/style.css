@@ -1,3 +1,11 @@
+QWidget#CleanerListItem {
+    background-color: rgb(55, 55, 55);
+}
+
+QWidget#CleanerListItem:hover {
+    background-color: rgb(65, 65, 65);
+}
+
 QLabel#CleanerLabel{
     color: rgb(165, 165, 165);
     font-size: 16px;
@@ -18,6 +26,29 @@ QLabel#fill{
     background-color: rgb(35, 35, 35);
 }
 
-QWidget{
+QLabel#Grade{
+    font-size: 32px;
+    color: rgb(200, 200, 200);
+}
+
+QLabel#GradeMessage{
+    font-size: 12px;
+    color: rgb(200, 200, 200);
+}
+
+/* QWidget{
     background-color: rgb(55, 55, 55);
+} */
+
+QProgressBar {
+     border: 0px;
+     border-radius: 5px;
+     text-align: center;
+     font-size: 24;
+     color: rgb(255, 255, 255);
+}
+
+QProgressBar::chunk {
+    background-color: white;
+    width: 1px;
 }

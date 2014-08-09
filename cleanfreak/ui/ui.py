@@ -8,8 +8,15 @@ import sys
 import os
 from functools import partial
 
-
+py_ver = sys.version
 REL = partial(os.path.join, os.path.dirname(__file__))
+BAR = "QProgressBar::chunk{{background-color: rgb({0}, {1}, {2});width: 1px;}}"
+
+
+if py_ver < (3,0):
+    # Monkey patch some stuff
+    import itertools
+    zip = itertools.izip
 
 
 class CleanerList(QtGui.QVBoxLayout):
@@ -26,8 +33,8 @@ class CleanerList(QtGui.QVBoxLayout):
 class CleanerStatus(QtGui.QWidget):
 
     colors = {
-        True: (0, 255, 0),
-        False: (255, 0, 0),
+        True: (145, 243, 85),
+        False: (242, 86, 86),
         None: (55, 55, 55)
     }
 
@@ -41,13 +48,14 @@ class CleanerStatus(QtGui.QWidget):
         self.update()
 
     def paintEvent(self, event):
-        painter = QtGui.QPainter()
-        painter.begin(self)
-        painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
-        painter.setPen(QtGui.QColor(*self.colors[self.status]))
-        painter.setBrush(QtGui.QColor(*self.colors[self.status]))
-        painter.drawEllipse(10, 10, 16, 16)
-        painter.end()
+        if self.status is not None:
+            painter = QtGui.QPainter()
+            painter.begin(self)
+            painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
+            painter.setPen(QtGui.QColor(*self.colors[self.status]))
+            painter.setBrush(QtGui.QColor(*self.colors[self.status]))
+            painter.drawEllipse(10, 10, 16, 16)
+            painter.end()
 
 
 class CleanerListItem(QtGui.QWidget):
@@ -96,7 +104,6 @@ class CleanerListItem(QtGui.QWidget):
     def mousePressEvent(self, event):
         '''Show message if there is one, else hide.'''
         msg_visible = self.message.isVisible()
-        print self.cleaner.msg
         if self.cleaner.msg:
             if msg_visible:
                 self.setFixedHeight(36)
@@ -125,19 +132,24 @@ class UI(QtGui.QDockWidget):
 
         self.widget = QtGui.QWidget(self)
         self.grid = QtGui.QGridLayout(self.widget)
-        self.grid.setContentsMargins(0, 0, 0, 0)
-        self.grid.setRowStretch(3, 1)
+        self.grid.setContentsMargins(20, 20, 20, 20)
+        self.grid.setRowStretch(4, 1)
         self.grid.setColumnStretch(0, 1)
         self.widget.setLayout(self.grid)
 
         self.cleaner_list = CleanerList()
 
-        self.progress_msg = QtGui.QLabel("Run your tests!")
-        self.progress_msg.setAlignment(QtCore.Qt.AlignHCenter)
+        self.progress_grd = QtGui.QLabel("Run your tests!")
+        self.progress_grd.setAlignment(QtCore.Qt.AlignHCenter)
+        self.progress_grd.setObjectName("Grade")
 
         self.progress_bar = QtGui.QProgressBar()
         self.progress_bar.setRange(0, 100)
         self.progress_bar.setValue(0)
+
+        self.progress_msg = QtGui.QLabel("Run your tests!")
+        self.progress_msg.setAlignment(QtCore.Qt.AlignHCenter)
+        self.progress_msg.setObjectName("GradeMessage")
 
         self.check_button = QtGui.QPushButton()
         self.check_button.setText("Run Checks")
@@ -145,13 +157,15 @@ class UI(QtGui.QDockWidget):
 
         self.clean_button = QtGui.QPushButton()
         self.clean_button.setText("Fix Failures")
+        self.clean_button.clicked.connect(self.clean)
 
 
-        self.grid.addWidget(self.progress_msg, 0, 0, 1, 3)
+        self.grid.addWidget(self.progress_grd, 0, 0, 1, 3)
         self.grid.addWidget(self.progress_bar, 1, 0, 1, 3)
-        self.grid.addLayout(self.cleaner_list, 2, 0, 1, 3)
-        self.grid.addWidget(self.check_button, 4, 1)
-        self.grid.addWidget(self.clean_button, 4, 2)
+        self.grid.addWidget(self.progress_msg, 2, 0, 1, 3)
+        self.grid.addLayout(self.cleaner_list, 3, 0, 1, 3)
+        self.grid.addWidget(self.check_button, 5, 1)
+        self.grid.addWidget(self.clean_button, 5, 2)
 
 
         self.setWidget(self.widget)
@@ -178,20 +192,34 @@ class UI(QtGui.QDockWidget):
         self.refr()
 
     def check(self):
-        self.progress_msg.setText("Running Cleaners...")
+        self.progress_grd.setText("Running Checkers...")
         self.progress_bar.setValue(0)
-        value_step = 1 / len(self.cleaner_items)
 
-        value = 0
-        for c, ci in zip(self.app.cleaners, self.cleaner_items):
+        checks = self.app.check_all()
+
+        for ci, (c, grade) in zip(self.cleaner_items, checks):
             self.progress_msg.setText("{0} checking...".format(c.full_name))
-            c._check()
             ci.refr()
-            if c.passed:
-                value += value_step
-            self.progress_bar.setValue(value * 100)
+            self.progress_bar.setStyleSheet(BAR.format(*grade.color))
+            self.progress_bar.setValue(grade.percent)
 
-        self.progress_msg.setText(self.app.format_grade())
+        self.progress_grd.setText(grade.title)
+        self.progress_msg.setText(grade.message)
+
+    def clean(self):
+        self.progress_grd.setText("Running Cleaners...")
+        self.progress_bar.setValue(0)
+
+        checks = self.app.clean_all()
+
+        for ci, (c, grade) in zip(self.cleaner_items, checks):
+            self.progress_msg.setText("{0} cleaning...".format(c.full_name))
+            ci.refr()
+            self.progress_bar.setStyleSheet(BAR.format(*grade.color))
+            self.progress_bar.setValue(grade.percent)
+
+        self.progress_grd.setText(grade.title)
+        self.progress_msg.setText(grade.message)
 
     def refr(self):
         for ci in self.cleaner_items:

@@ -10,8 +10,6 @@ class A(Cleaner):
         print "A Setup"
 
     def check(self):
-        print "A Check"
-        time.sleep(1)
         return True, "A Check: SUCCESS!"
 
     def clean(self):
@@ -28,7 +26,6 @@ class B(Cleaner):
         print "B Setup"
 
     def check(self):
-        time.sleep(2)
         return True, "B Check: SUCCESS!"
 
     def clean(self):
@@ -45,7 +42,6 @@ class C(Cleaner):
         print "C Setup"
 
     def check(self):
-        time.sleep(3)
         return False, "C Check: FAIL!"
 
     def clean(self):
@@ -61,7 +57,6 @@ class D(Cleaner):
         print "D Setup"
 
     def check(self):
-        time.sleep(0.2)
         return True, "D Check: SUCCESS!"
 
     def clean(self):
@@ -94,8 +89,71 @@ class F(Cleaner):
         print "F Setup"
 
     def check(self):
-        time.sleep(1)
         return False, "F Check: FAIL!"
 
     def clean(self):
         return False, "F Clean: CLEAN FAIL!"
+
+
+class G(Cleaner):
+
+    full_name = "Cleaner G"
+    description = "My awesome cleaner G!"
+
+    def setup(self):
+
+        print "G Setup"
+
+    def check(self):
+        return False, "G Check: FAIL!"
+
+    def clean(self):
+        return True, "G Clean: CLEANED!"
+
+
+class H(Cleaner):
+
+    full_name = "Cleaner H"
+    description = "My awesome cleaner H!"
+
+    def setup(self):
+        print "H Setup"
+
+    def check(self):
+        return True, "H Check: SUCCESS!"
+
+    def clean(self):
+        return False, "H Clean: CLEANED!"
+
+
+class I(Cleaner):
+
+    full_name = "Cleaner I"
+    description = "My awesome cleaner I!"
+
+    def setup(self):
+        print "I Setup"
+
+    def check(self):
+        if self.cleaned:
+            return True, "I Check: SUCCESS!"
+        return False, "I Check: FAIL!"
+
+    def clean(self):
+        return True, "I Clean: CLEANED!"
+
+
+class J(Cleaner):
+
+    full_name = "Cleaner J"
+    description = "My awesome cleaner J!"
+
+    def setup(self):
+        print "J Setup"
+
+    def check(self):
+        return True, "J Check: SUCCESS!"
+
+    def clean(self):
+        return False, "J Clean: CLEAN FAIL!"
+
