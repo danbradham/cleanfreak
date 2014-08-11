@@ -53,7 +53,7 @@ docs/_build/
 target/
 
 # Sublime Text
-.sublime*
+*.sublime*
 
 # Temporary Files
 temp.py

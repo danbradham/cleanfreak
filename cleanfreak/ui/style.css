@@ -1,18 +1,26 @@
-QWidget#CleanerListItem {
+QWidget#CleanerListItem{
+    background-color: rgb(50, 50, 50);
+}
+
+QWidget#CleanerListItem:hover{
+    background-color: rgb(60, 60, 60);
+}
+
+QWidget#Scroll{
     background-color: rgb(55, 55, 55);
 }
 
-QWidget#CleanerListItem:hover {
-    background-color: rgb(65, 65, 65);
+QWidget#Fill{
+    background-color: rgb(45, 45, 45);
 }
 
 QLabel#CleanerLabel{
-    color: rgb(165, 165, 165);
+    color: rgb(200, 200, 200);
     font-size: 16px;
 }
 
 QLabel#CleanerDesc{
-    color: rgb(165, 165, 165);
+    color: rgb(200, 200, 200);
     font-size: 10px;
 }
 
@@ -20,10 +28,13 @@ QLabel#CleanerMessage{
     background-color: rgb(35, 35, 35);
     color: rgb(135, 135, 135);
     font-size: 10px;
+    padding: 10px;
+    border-left: 4px solid rgb(55, 55, 55);
+    border-right: 4px solid rgb(55, 55, 55);
 }
 
-QLabel#fill{
-    background-color: rgb(35, 35, 35);
+QDockWidget{
+    background-color: rgb(55, 55, 55);
 }
 
 QLabel#Grade{
@@ -36,19 +47,178 @@ QLabel#GradeMessage{
     color: rgb(200, 200, 200);
 }
 
-/* QWidget{
+QWidget#Main{
     background-color: rgb(55, 55, 55);
-} */
+}
 
 QProgressBar {
-     border: 0px;
+     border: 2px solid rgb(45, 45, 45);
      border-radius: 5px;
      text-align: center;
      font-size: 24;
+     background-color: rgb(45, 45, 45);
      color: rgb(255, 255, 255);
 }
 
 QProgressBar::chunk {
-    background-color: white;
+    background-color: rgb(45, 45, 45);
     width: 1px;
+}
+
+QPushButton#CheckButton{
+    background-color: rgb(65, 65, 65);
+    color: rgb(200, 200, 200);
+    font-size: 12px;
+    border: 0;
+    border-bottom: 2px solid rgb(45, 45, 45);
+    padding: 8px;
+    border-radius: 5px;
+}
+
+QPushButton#CheckButton:hover{
+    background-color: rgb(75, 75, 75);
+}
+
+QPushButton#CleanButton{
+    background-color: rgb(198, 53, 34);
+    color: rgb(200, 200, 200);
+    font-size: 12px;
+    border: 0;
+    border-bottom: 2px solid rgb(178, 33, 14);
+    padding: 8px;
+    border-radius: 5px;
+}
+
+QPushButton#CleanButton:hover{
+    background-color: rgb(208, 58, 39);
+}
+
+QComboBox {
+    font-size: 12px;
+    background: rgb(45, 45, 45);
+    color: rgb(235, 235, 235);
+    border: none;
+    outline: none;
+    padding: 0px;
+    height: 32;
+    width: 90;
+    padding-left: 10;
+    border-radius: 5px;
+}
+
+QComboBox::drop-down{
+    margin-top: 12px;
+    border-top: 6px solid rgb(145,145,145);
+    border-right: 6px solid rgb(255,255,255,0);
+    border-left: 6px solid rgb(255,255,255,0);
+    border-bottom: 0px solid rgb(235,235,235, 0);
+    margin-right: 4px;
+    background: rgb(45, 45, 45);
+}
+
+QComboBox QAbstractItemView{
+    border: none;
+    outline: none;
+    background-color: rgb(65, 65, 65);
+    color: rgb(235, 235, 235);
+    selection-background-color: rgb(125, 125, 125);
+    selection-color:rgb(255, 255, 255);
+}
+
+/**************************
+Scroll Bars
+***************************/
+QScrollArea{
+    border: none;
+    background: rgb(55,55,55);
+}
+
+QScrollBar:horizontal {
+    background: rgb(255, 255, 255, 0);
+    height: 6px;
+    margin: 0px 20px 0px 20px;
+}
+
+QScrollBar::handle:horizontal {
+    background: rgb(85, 85, 85);
+    min-width: 20px;
+    height: 4px;
+}
+
+QScrollBar::add-line:horizontal {
+    background: rgb(41,41,41,0);
+    height: 1px;
+    left: 20px;
+    right: 20px;
+    subcontrol-origin: margin;
+    subcontrol-position: left;
+}
+
+QScrollBar::sub-line:horizontal {
+    background: rgb(41,41,41,0);
+    height: 1px;
+    left: 20px;
+    right: 20px;
+    subcontrol-origin: margin;
+    subcontrol-position: right;
+}
+
+QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+    background: none;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+    height: 1px solid;
+}
+
+QScrollBar:vertical {
+    background: rgb(255, 255, 255, 0);
+    width: 12px;
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 4px;
+}
+
+QScrollBar::handle:vertical {
+    background: rgb(50, 50, 50);
+    min-height: 20px;
+    height: 40px;
+    width: 12px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: rgb(65, 65, 65);
+    min-height: 20px;
+    height: 40px;
+    width: 12px;
+}
+
+QScrollBar::add-line:vertical {
+    background: rgb(145,145,145,0);
+    width: 1px;
+    top: 20px;
+    bottom: 20px;
+    left: 4px;
+    subcontrol-origin: paddding;
+    subcontrol-position: top;
+}
+
+QScrollBar::sub-line:vertical {
+    background: rgb(145,145,145,0);
+    width: 1px;
+    top: 20px;
+    bottom: 20px;
+    left: 4px;
+    subcontrol-origin: padding;
+    subcontrol-position: bottom;
+}
+
+QScrollBar::top-arrow:vertical, QScrollBar::bottom-arrow:vertical {
+    background: rgb(255,255,255,0);
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: rgb(255,255,255,0);
 }

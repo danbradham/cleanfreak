@@ -1,5 +1,4 @@
 from cleanfreak.cleaner import Cleaner
-import time
 
 class A(Cleaner):
 
@@ -42,7 +41,8 @@ class C(Cleaner):
         print "C Setup"
 
     def check(self):
-        return False, "C Check: FAIL!"
+        raise Exception("Crazy super exception")
+        return False, "Super ultra mega long failing message what does it do."
 
     def clean(self):
         return True, "C Clean: CLEANED!"

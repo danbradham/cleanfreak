@@ -2,6 +2,9 @@ from __future__ import division
 from .config import Config
 from .runner import Runner
 from .utils import collect
+from .messages import (
+    StartCleaner, FinishCleaner, OnCheck, OnClean, CheckFirst, SuiteSet)
+from .shout import shout
 import random
 
 
@@ -53,50 +56,100 @@ class CleanFreak(object):
         self.cleaner_count = 0
         self.ui = None
         self._grade = None
+        self.checked = False
 
         if "DEFAULT" in self.config.get("SUITES", []):
-            self.set_suite("DEFAULT")
+            suite = self.config["SUITES"].pop("DEFAULT")
+            self.set_suite(suite)
 
-    def check_all(self):
-        '''Generator that runs all checks, yields a cleaner and grade'''
+    def checks(self):
+        '''Runs checks while emitting emits three types of :class:`Message` s.
+
+        - :class:`StartCleaner` is emitted prior to running checks.
+        - :class:`OnCheck` is emitted after each check with the cleaner and a
+        - grade objects.
+        - :class:`FinishCleaner` is emitted after all checks are completed
+        with the final grade object.'''
+
+        self._grade = None
+        shout(StartCleaner, "Running Checks...")
+
         for c in self.cleaners:
             c._check()
             grade = Grade.create(self)
-            yield c, grade
-        self._grade = grade
+            shout(OnCheck, c, grade)
 
-    def clean_all(self):
-        '''Generator that runs all cleans, yields a cleaner and grade'''
+        self._grade = Grade.create(self)
+        self.checked = True
+        shout(FinishCleaner, self._grade)
+
+    def cleans(self):
+        '''Runs cleans while emitting emits three types of :class:`Message` s.
+
+        - :class:`StartCleaner` is emitted prior to running checks.
+        - :class:`OnClean` is emitted after each check with the cleaner and a
+        - grade objects.
+        - :class:`FinishCleaner` is emitted after all checks are completed
+        with the final grade object.'''
+        if not self.checked:
+            shout(CheckFirst, "You've got to run checks first!")
+            return
+
+        shout(StartCleaner, "Running Cleans...")
+
         for c in self.cleaners:
             c._clean()
             grade = Grade.create(self)
-            yield c, grade
-        self._grade = grade
+            shout(OnClean, c, grade)
+
+        self._grade = Grade.create(self)
+        shout(FinishCleaner, self._grade)
+        self.checks()
 
     def set_suite(self, suite):
+        '''Sets the suite to the specified value. Collects all cleaners listed
+        in the suites configuration. If the suite is not in your configuration,
+        raisees a KeyError.
+
+        :param suite: The key of your suite in config["SUITES"]'''
+
+        if not suite in self.config["SUITES"]:
+            raise KeyError("Unconfigured suite: {0}".format(suite))
+
+        self.suite_name = suite
         self.suite = self.config["SUITES"][suite]
         self.cleaners = collect(self.suite)
         self.cleaner_count = len(self.cleaners)
+        self.checked = False
+        shout(SuiteSet)
 
     def list_suites(self):
+        '''Lists the names of all the configured suites.'''
         return self.config["SUITES"].keys()
 
     @property
     def successes(self):
+        '''Number of successful checks.'''
+
         if not self._grade:
             self._successes = len([c for c in self.cleaners if c.passed])
         return self._successes
 
     @property
     def grade(self):
+        '''Returns a :class:`Grade` with data based on the number of successful
+        checks.'''
+
         if self._grade is None:
             self._grade = Grade.create(self)
         return self._grade
 
     def show(self):
-        '''Pulls in a ui context and creates the ui.'''
+        '''Pulls in a ui context and creates the ui. You must have a "CONTEXT"
+        key in your configuration.'''
+
         if not self.ui:
             from . import ui
-            UI = ui.get(self.config["UI_CONTEXT"])
+            UI = ui.get(self.config["CONTEXT"])
             self.ui = UI.create(self)
         self.ui.show()

@@ -1,7 +1,6 @@
-CONTEXT: MAYA
-UI_CONTEXT: DEFAULT
+CONTEXT: DEFAULT
 SUITES:
-    MODEL: &MODEL
+    MODEL:
         - tests.cleaners.A
         - tests.cleaners.B
         - tests.cleaners.C
@@ -12,48 +11,54 @@ SUITES:
         - tests.cleaners.H
         - tests.cleaners.I
         - tests.cleaners.J
-    SHADE: &SHADE
+    SHADE:
         - tests.cleaners.A
         - tests.cleaners.B
         - tests.cleaners.D
         - tests.cleaners.H
         - tests.cleaners.J
-    RIG: &RIG
+    RIG:
         - tests.cleaners.A
         - tests.cleaners.C
         - tests.cleaners.E
-    LIGHT: &LIGHT
+    LIGHT:
         - tests.cleaners.E
         - tests.cleaners.D
         - tests.cleaners.B
-    DEFAULT: *SHADE
+    DEFAULT: "MODEL"
 GRADES:
     FAILURE:
-        COLOR: [242, 86, 86]
+        COLOR: [198, 53, 34]
         MESSAGES:
             - 'You and everyone around you are complete failures...'
+            - 'Everything you touch turns to poo...'
     TERRIBLE:
-        COLOR: [242, 86, 86]
+        COLOR: [198, 53, 34]
         MESSAGES:
             - 'Not good my friend, not good.'
     BAD:
-        COLOR: [243, 156, 85]
+        COLOR: [222, 150, 50]
         MESSAGES:
             - 'Come on now.'
     NOT GOOD:
-        COLOR: [243, 156, 85]
+        COLOR: [222, 150, 50]
         MESSAGES:
             - 'Not bad, but, certainly not good.'
+            - 'It could be worse...of course, it could be better.'
     SO SO:
-        COLOR: [242, 229, 88]
+        COLOR: [214, 222, 34]
         MESSAGES:
-            - 'Alright, alright.'
+            - 'Alright, alright, alright.'
+            - 'Keep going you are almost there.'
     SOLID:
-        COLOR: [145, 243, 85]
+        COLOR: [71, 204, 74]
         MESSAGES:
             - 'Pretty great work buddy!'
+            - 'Wow. So close.'
+            - 'Solid, yes very solid.'
     PERFECT:
-        COLOR: [85, 141, 243]
+        COLOR: [100, 166, 222]
         MESSAGES:
             - 'You are so good at whatever you did!'
+            - 'A natural, that is what you are!'
     ORD: [FAILURE, TERRIBLE, BAD, NOT GOOD, SO SO, SOLID, PERFECT]
