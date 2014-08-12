@@ -72,7 +72,6 @@ class CleanerList(QtGui.QScrollArea):
         # self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
         self.vScrollBar = self.verticalScrollBar()
-        self.hScrollBar = self.horizontalScrollBar()
         self.button = None
 
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
@@ -90,12 +89,13 @@ class CleanerList(QtGui.QScrollArea):
 
     def mouseMoveEvent(self, event):
         if self.button:
+            self.vScrollBar = self.verticalScrollBar()
+            if not self.vScrollBar:
+                return
             currentPoint = event.pos()
             scroll_vector = (currentPoint - self.lastPoint)
             yValue = self.vScrollBar.value()
-            xValue = self.hScrollBar.value()
             self.vScrollBar.setValue(yValue + (-1 * scroll_vector.y()))
-            self.hScrollBar.setValue(xValue + (-1 * scroll_vector.x()))
             self.lastPoint = currentPoint
 
 
@@ -191,6 +191,15 @@ class UI(QtGui.QDockWidget):
         super(UI, self).__init__(parent)
 
         self.app = app
+
+        self.setFeatures(
+            QtGui.QDockWidget.DockWidgetClosable|
+            QtGui.QDockWidget.DockWidgetFloatable|
+            QtGui.QDockWidget.DockWidgetMovable)
+        self.setFloating(True)
+        self.setAllowedAreas(
+            QtCore.Qt.LeftDockWidgetArea|
+            QtCore.Qt.RightDockWidgetArea)
 
         self.widget = QtGui.QWidget(self)
         self.widget.setObjectName("Main")

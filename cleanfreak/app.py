@@ -1,11 +1,16 @@
 from __future__ import division
-from .config import Config
+from functools import partial
+import os
+import random
+from .config import Config, load_yaml
 from .runner import Runner
 from .utils import collect
 from .messages import (
     StartCleaner, FinishCleaner, OnCheck, OnClean, CheckFirst, SuiteSet)
 from .shout import shout
-import random
+
+
+REL = partial(os.path.join, os.path.dirname(__file__))
 
 
 class Grade(object):
@@ -41,14 +46,10 @@ class Grade(object):
 class CleanFreak(object):
 
     def __init__(self, cfg_file=None):
-        self.config = Config()
+        defaults = load_yaml(REL('defaults.yml'))
+        self.config = Config(defaults)
         if cfg_file:
-            if cfg_file.split(".")[-1] in ["yaml", "yml"]:
-                self.config.from_yaml(cfg_file)
-            elif cfg_file.split(".")[-1] in ["son", "json", "jsn"]:
-                self.config.from_json(cfg_file)
-            else:
-                raise OSError("Config files can be json or yaml.")
+            self.config.from_file(cfg_file)
 
         self.runner = Runner()
         self.cleaners = None
@@ -58,8 +59,8 @@ class CleanFreak(object):
         self._grade = None
         self.checked = False
 
-        if "DEFAULT" in self.config.get("SUITES", []):
-            suite = self.config["SUITES"].pop("DEFAULT")
+        if "DEFAULT" in self.config.get('SUITES', []):
+            suite = self.config['SUITES'].pop('DEFAULT')
             self.set_suite(suite)
 
     def checks(self):
@@ -72,7 +73,7 @@ class CleanFreak(object):
         with the final grade object.'''
 
         self._grade = None
-        shout(StartCleaner, "Running Checks...")
+        shout(StartCleaner, 'Running Checks...')
 
         for c in self.cleaners:
             c._check()
@@ -95,7 +96,7 @@ class CleanFreak(object):
             shout(CheckFirst, "You've got to run checks first!")
             return
 
-        shout(StartCleaner, "Running Cleans...")
+        shout(StartCleaner, 'Running Cleans...')
 
         for c in self.cleaners:
             c._clean()
@@ -111,13 +112,13 @@ class CleanFreak(object):
         in the suites configuration. If the suite is not in your configuration,
         raisees a KeyError.
 
-        :param suite: The key of your suite in config["SUITES"]'''
+        :param suite: The key of your suite in config['SUITES']'''
 
-        if not suite in self.config["SUITES"]:
-            raise KeyError("Unconfigured suite: {0}".format(suite))
+        if not suite in self.config['SUITES']:
+            raise KeyError('Unconfigured suite: {0}'.format(suite))
 
         self.suite_name = suite
-        self.suite = self.config["SUITES"][suite]
+        self.suite = self.config['SUITES'][suite]
         self.cleaners = collect(self.suite)
         self.cleaner_count = len(self.cleaners)
         self.checked = False
@@ -125,7 +126,7 @@ class CleanFreak(object):
 
     def list_suites(self):
         '''Lists the names of all the configured suites.'''
-        return self.config["SUITES"].keys()
+        return self.config['SUITES'].keys()
 
     @property
     def successes(self):
@@ -150,6 +151,6 @@ class CleanFreak(object):
 
         if not self.ui:
             from . import ui
-            UI = ui.get(self.config["CONTEXT"])
+            UI = ui.get(self.config['CONTEXT'])
             self.ui = UI.create(self)
         self.ui.show()

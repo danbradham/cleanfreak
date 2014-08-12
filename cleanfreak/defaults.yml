@@ -1,31 +1,4 @@
-CONTEXT: MAYA
-SUITES:
-    MODEL:
-        - tests.cleaners.A
-        - tests.cleaners.B
-        - tests.cleaners.C
-        - tests.cleaners.D
-        - tests.cleaners.E
-        - tests.cleaners.F
-        - tests.cleaners.G
-        - tests.cleaners.H
-        - tests.cleaners.I
-        - tests.cleaners.J
-    SHADE:
-        - tests.cleaners.A
-        - tests.cleaners.B
-        - tests.cleaners.D
-        - tests.cleaners.H
-        - tests.cleaners.J
-    RIG:
-        - tests.cleaners.A
-        - tests.cleaners.C
-        - tests.cleaners.E
-    LIGHT:
-        - tests.cleaners.E
-        - tests.cleaners.D
-        - tests.cleaners.B
-    DEFAULT: "MODEL"
+CONTEXT: DEFAULT
 GRADES:
     FAILURE:
         COLOR: [198, 53, 34]

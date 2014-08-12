@@ -1,5 +1,5 @@
 from .ui import UI
-from .maya import MayaUI
+from .mayaui import MayaUI
 
 
 CONTEXTS = {
