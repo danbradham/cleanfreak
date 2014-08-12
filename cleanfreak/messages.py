@@ -24,3 +24,5 @@ class CheckFirst(Message):
 class SuiteSet(Message):
     '''Shouted when suite changed.'''
 
+class Started(Message):
+    '''Emitted on instancing CleanFreak'''

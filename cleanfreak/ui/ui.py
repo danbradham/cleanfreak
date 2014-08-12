@@ -184,6 +184,22 @@ class CleanerListItem(QtGui.QWidget):
         self.desc.setText(self.cleaner.description)
         self.message.setText(self.cleaner.msg)
 
+class Toolbar(QtGui.QWidget):
+
+    def __init__(self, parent=None):
+        super(Toolbar, self).__init__(parent)
+
+        self.setObjectName("Toolbar")
+        self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
+
+        self.layout = QtGui.QGridLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(self.layout)
+        self.setFixedHeight(80)
+
+    def addWidget(self, *args, **kwargs):
+        self.layout.addWidget(*args, **kwargs)
+
 @has_ears
 class UI(QtGui.QDockWidget):
 
@@ -206,11 +222,29 @@ class UI(QtGui.QDockWidget):
         self.widget.setAttribute(QtCore.Qt.WA_StyledBackground, True)
         self.grid = QtGui.QGridLayout(self.widget)
         self.grid.setContentsMargins(20, 20, 20, 20)
-        self.grid.setRowStretch(3, 1)
-        self.grid.setColumnStretch(0, 1)
-        self.grid.setColumnStretch(4, 1)
+        self.grid.setRowStretch(5, 1)
         self.grid.setSpacing(10)
         self.widget.setLayout(self.grid)
+
+        self.toolbar = Toolbar(self.widget)
+
+        self.suite_label = QtGui.QLabel("Suite:")
+        self.context_opts = QtGui.QComboBox()
+
+        self.check_button = QtGui.QPushButton()
+        self.check_button.setText("Run Checks")
+        self.check_button.clicked.connect(self.app.checks)
+        self.check_button.setObjectName("CheckButton")
+
+        self.clean_button = QtGui.QPushButton()
+        self.clean_button.setText("Clean it up!")
+        self.clean_button.clicked.connect(self.app.cleans)
+        self.clean_button.setObjectName("CleanButton")
+
+        self.toolbar.addWidget(self.suite_label, 0, 0)
+        self.toolbar.addWidget(self.context_opts, 0, 1)
+        self.toolbar.addWidget(self.check_button, 0, 2)
+        self.toolbar.addWidget(self.check_button, 0, 3)
 
         self.cleaner_list = CleanerList()
         self.cleaner_list.scrollWidget.setAttribute(
@@ -228,25 +262,11 @@ class UI(QtGui.QDockWidget):
         self.progress_msg.setAlignment(QtCore.Qt.AlignHCenter)
         self.progress_msg.setObjectName("GradeMessage")
 
-        self.context_opts = QtGui.QComboBox()
-
-        self.check_button = QtGui.QPushButton()
-        self.check_button.setText("Run Checks")
-        self.check_button.clicked.connect(self.app.checks)
-        self.check_button.setObjectName("CheckButton")
-
-        self.clean_button = QtGui.QPushButton()
-        self.clean_button.setText("Clean it up!")
-        self.clean_button.clicked.connect(self.app.cleans)
-        self.clean_button.setObjectName("CleanButton")
-
-        self.grid.addWidget(self.progress_grd, 0, 0, 1, 5)
-        self.grid.addWidget(self.progress_bar, 1, 0, 1, 5)
-        self.grid.addWidget(self.progress_msg, 2, 0, 1, 5)
-        self.grid.addWidget(self.cleaner_list, 3, 0, 1, 5)
-        self.grid.addWidget(self.context_opts, 4, 1)
-        self.grid.addWidget(self.check_button, 4, 2)
-        self.grid.addWidget(self.clean_button, 4, 3)
+        self.grid.addWidget(self.toolbar, 0, 0)
+        self.grid.addWidget(self.progress_grd, 1, 0)
+        self.grid.addWidget(self.progress_bar, 2, 0)
+        self.grid.addWidget(self.progress_msg, 3, 0)
+        self.grid.addWidget(self.cleaner_list, 4, 0)
 
         self.setWidget(self.widget)
         self.setWindowTitle("CleanFreak - Clean your shit up!")

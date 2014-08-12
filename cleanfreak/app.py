@@ -5,8 +5,8 @@ import random
 from .config import Config, load_yaml
 from .runner import Runner
 from .utils import collect
-from .messages import (
-    StartCleaner, FinishCleaner, OnCheck, OnClean, CheckFirst, SuiteSet)
+from .messages import (StartCleaner, FinishCleaner, OnCheck, OnClean,
+                       CheckFirst, SuiteSet, Started)
 from .shout import shout
 
 
@@ -62,6 +62,8 @@ class CleanFreak(object):
         if "DEFAULT" in self.config.get('SUITES', []):
             suite = self.config['SUITES'].pop('DEFAULT')
             self.set_suite(suite)
+
+        shout(Started, self)
 
     def checks(self):
         '''Runs checks while emitting emits three types of :class:`Message` s.

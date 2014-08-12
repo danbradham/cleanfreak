@@ -9,5 +9,8 @@ CONTEXTS = {
 
 
 def get(context):
-    global CONTEXTS
-    return CONTEXTS.get(context.upper(), CONTEXTS.get("DEFAULT"))
+    context = context.upper()
+    try:
+        return CONTEXTS.get(context)
+    except KeyError:
+        raise KeyError("UI Context does not exist for: {0}".format(context))

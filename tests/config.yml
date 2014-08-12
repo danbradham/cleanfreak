@@ -1,4 +1,4 @@
-CONTEXT: MAYA
+CONTEXT: DEFAULT
 SUITES:
     MODEL:
         - tests.cleaners.A
