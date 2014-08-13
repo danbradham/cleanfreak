@@ -47,6 +47,11 @@ QLabel#GradeMessage{
     color: rgb(200, 200, 200);
 }
 
+QLabel#Basic{
+    font-size: 12px;
+    color: rgb(200, 200, 200);
+}
+
 QWidget#Main{
     background-color: rgb(55, 55, 55);
 }
@@ -70,8 +75,8 @@ QPushButton#CheckButton{
     color: rgb(200, 200, 200);
     font-size: 12px;
     border: 0;
-    border-bottom: 2px solid rgb(45, 45, 45);
-    padding: 8px;
+    border-bottom: 2px solid rgb(55, 55, 55);
+    padding: 6px;
     border-radius: 5px;
 }
 
@@ -85,7 +90,7 @@ QPushButton#CleanButton{
     font-size: 12px;
     border: 0;
     border-bottom: 2px solid rgb(178, 33, 14);
-    padding: 8px;
+    padding: 6px;
     border-radius: 5px;
 }
 
@@ -95,15 +100,16 @@ QPushButton#CleanButton:hover{
 
 QComboBox {
     font-size: 12px;
-    background: rgb(45, 45, 45);
+    background: rgb(65, 65, 65);
     color: rgb(235, 235, 235);
     border: none;
     outline: none;
     padding: 0px;
-    height: 32;
-    width: 90;
+    height: 26;
+    width: 75;
     padding-left: 10;
     border-radius: 5px;
+    border-bottom: 2px solid rgb(55, 55, 55);
 }
 
 QComboBox::drop-down{
@@ -113,13 +119,13 @@ QComboBox::drop-down{
     border-left: 6px solid rgb(255,255,255,0);
     border-bottom: 0px solid rgb(235,235,235, 0);
     margin-right: 4px;
-    background: rgb(45, 45, 45);
+    background: rgb(65, 65, 65);
 }
 
 QComboBox QAbstractItemView{
     border: none;
     outline: none;
-    background-color: rgb(65, 65, 65);
+    background-color: rgb(55, 55, 55);
     color: rgb(235, 235, 235);
     selection-background-color: rgb(125, 125, 125);
     selection-color:rgb(255, 255, 255);

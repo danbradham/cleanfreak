@@ -193,9 +193,10 @@ class Toolbar(QtGui.QWidget):
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
         self.layout = QtGui.QGridLayout()
-        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setColumnStretch(0, 1)
+        self.layout.setColumnStretch(5, 1)
         self.setLayout(self.layout)
-        self.setFixedHeight(80)
+        self.setFixedHeight(50)
 
     def addWidget(self, *args, **kwargs):
         self.layout.addWidget(*args, **kwargs)
@@ -216,19 +217,30 @@ class UI(QtGui.QDockWidget):
         self.setAllowedAreas(
             QtCore.Qt.LeftDockWidgetArea|
             QtCore.Qt.RightDockWidgetArea)
+        self.setWindowTitle("CleanFreak - Clean your shit up!")
+        self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
         self.widget = QtGui.QWidget(self)
         self.widget.setObjectName("Main")
         self.widget.setAttribute(QtCore.Qt.WA_StyledBackground, True)
-        self.grid = QtGui.QGridLayout(self.widget)
+        self.setWidget(self.widget)
+
+        self.top_grid = QtGui.QGridLayout()
+        self.top_grid.setContentsMargins(0, 0, 0, 0)
+        self.top_grid.setRowStretch(0, 1)
+        self.widget.setLayout(self.top_grid)
+
+        self.grid = QtGui.QGridLayout()
         self.grid.setContentsMargins(20, 20, 20, 20)
-        self.grid.setRowStretch(5, 1)
+        self.grid.setRowStretch(3, 1)
         self.grid.setSpacing(10)
-        self.widget.setLayout(self.grid)
 
         self.toolbar = Toolbar(self.widget)
+        self.top_grid.addWidget(self.toolbar, 0, 0)
+        self.top_grid.addLayout(self.grid, 1, 0)
 
         self.suite_label = QtGui.QLabel("Suite:")
+        self.suite_label.setObjectName("Basic")
         self.context_opts = QtGui.QComboBox()
 
         self.check_button = QtGui.QPushButton()
@@ -241,10 +253,10 @@ class UI(QtGui.QDockWidget):
         self.clean_button.clicked.connect(self.app.cleans)
         self.clean_button.setObjectName("CleanButton")
 
-        self.toolbar.addWidget(self.suite_label, 0, 0)
-        self.toolbar.addWidget(self.context_opts, 0, 1)
-        self.toolbar.addWidget(self.check_button, 0, 2)
+        #self.toolbar.addWidget(self.suite_label, 0, 1)
+        self.toolbar.addWidget(self.context_opts, 0, 2)
         self.toolbar.addWidget(self.check_button, 0, 3)
+        self.toolbar.addWidget(self.clean_button, 0, 4)
 
         self.cleaner_list = CleanerList()
         self.cleaner_list.scrollWidget.setAttribute(
@@ -262,15 +274,11 @@ class UI(QtGui.QDockWidget):
         self.progress_msg.setAlignment(QtCore.Qt.AlignHCenter)
         self.progress_msg.setObjectName("GradeMessage")
 
-        self.grid.addWidget(self.toolbar, 0, 0)
-        self.grid.addWidget(self.progress_grd, 1, 0)
-        self.grid.addWidget(self.progress_bar, 2, 0)
-        self.grid.addWidget(self.progress_msg, 3, 0)
-        self.grid.addWidget(self.cleaner_list, 4, 0)
+        self.grid.addWidget(self.progress_grd, 0, 0)
+        self.grid.addWidget(self.progress_bar, 1, 0)
+        self.grid.addWidget(self.progress_msg, 2, 0)
+        self.grid.addWidget(self.cleaner_list, 3, 0)
 
-        self.setWidget(self.widget)
-        self.setWindowTitle("CleanFreak - Clean your shit up!")
-        self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
         self.cleaner_items = {}
         self.context_opts.addItems(self.app.config["SUITES"].keys())
