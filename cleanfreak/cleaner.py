@@ -19,8 +19,16 @@ class Cleaner(ABC):
 
     full_name = None
     description = None
+    fail_msg = "Failed!"
+    pass_msg = "Passed!"
+    clean_msg = "Cleaned!"
 
     def __init__(self):
+        self.passed = None
+        self.cleaned = False
+        self.msg = None
+
+    def _reset(self):
         self.passed = None
         self.cleaned = False
         self.msg = None
@@ -34,7 +42,9 @@ class Cleaner(ABC):
 
         try:
             self.setup()
-            self.passed, self.msg = self.check()
+            self.passed, msg = self.check()
+            if not self.cleaned:
+                self.msg = msg
         except:
             self.msg = traceback.format_exc()
             self.passed = False
@@ -66,8 +76,6 @@ class Cleaner(ABC):
 
             import maya.cmds as cmds
             self.no_uvs = []
-            self.fail_msg = "These nodes have no UVs: {0}"
-            self.passed_msg = "All meshes in your scene have UVs. Congrats!!"
         '''
 
     @abstractmethod

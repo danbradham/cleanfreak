@@ -46,9 +46,11 @@ class Grade(object):
 class CleanFreak(object):
 
     def __init__(self, cfg_file=None):
-        defaults = load_yaml(REL('defaults.yml'))
+        defaults = load_yaml(REL('conf', 'defaults.yml'))
         self.config = Config(defaults)
         if cfg_file:
+            rel_path = REL('conf', cfg_file)
+            cfg_file = rel_path if os.path.exists(rel_path) else cfg_file
             self.config.from_file(cfg_file)
 
         self.runner = Runner()

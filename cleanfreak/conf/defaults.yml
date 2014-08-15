@@ -5,14 +5,18 @@ GRADES:
         MESSAGES:
             - 'You and everyone around you are complete failures...'
             - 'Everything you touch turns to poo...'
+            - 'This is coming out of your paycheck.'
     TERRIBLE:
         COLOR: [198, 53, 34]
         MESSAGES:
             - 'Not good my friend, not good.'
+            - 'Do not cry my friend, but, YOU SUCK!'
     BAD:
         COLOR: [222, 150, 50]
         MESSAGES:
             - 'Come on now.'
+            - "I think McDonald's is hiring."
+            - 'You should go into design.'
     NOT GOOD:
         COLOR: [222, 150, 50]
         MESSAGES:
@@ -34,4 +38,5 @@ GRADES:
         MESSAGES:
             - 'You are so good at whatever you did!'
             - 'A natural, that is what you are!'
+            - 'I am so hard.'
     ORD: [FAILURE, TERRIBLE, BAD, NOT GOOD, SO SO, SOLID, PERFECT]

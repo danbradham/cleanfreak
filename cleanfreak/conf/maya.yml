@@ -1,0 +1,12 @@
+CONTEXT: MAYA
+SUITES:
+    MODEL:
+        - cleanfreak.cleaners.mayacleaners.References
+        - cleanfreak.cleaners.mayacleaners.Intermediates
+    SHADE:
+        - cleanfreak.cleaners.mayacleaners.References
+    RIG:
+        - cleanfreak.cleaners.mayacleaners.References
+    LIGHT:
+        - cleanfreak.cleaners.mayacleaners.References
+    DEFAULT: "MODEL"
