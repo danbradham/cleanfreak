@@ -9,9 +9,9 @@ def import_module(name):
     return sys.modules[name]
 
 
-def get_cleaner(name, mod_path):
+def get_checker(name, mod_path):
     '''Return module from dotted path'''
-    from cleanfreak.cleaner import Cleaner
+    from cleanfreak.checker import Checker
 
     m = sys.modules.get(mod_path, import_module(mod_path))
 
@@ -19,21 +19,21 @@ def get_cleaner(name, mod_path):
         c = getattr(m, name)
     except AttributeError:
         raise AttributeError(
-            "Cleaner {0} not found in {1}!".format(name, mod_path))
+            "Checker {0} not found in {1}!".format(name, mod_path))
 
-    if issubclass(c, Cleaner):
+    if issubclass(c, Checker):
         return c
 
-    raise TypeError("Cleaners must be a subclass of cleaner: {0}".format(c))
+    raise TypeError("Checkers must be a subclass of checker: {0}".format(c))
 
 
 def collect(suite):
-    cleaners = []
+    checkers = []
 
     for mod_path in suite:
         mod_path, name = os.path.splitext(mod_path)
         name = name.lstrip(".")
-        c = get_cleaner(name, mod_path)()
-        cleaners.append(c)
+        c = get_checker(name, mod_path)()
+        checkers.append(c)
 
-    return cleaners
+    return checkers

@@ -1,30 +1,30 @@
 CONTEXT: DEFAULT
 SUITES:
     MODEL:
-        - tests.cleaners.A
-        - tests.cleaners.B
-        - tests.cleaners.C
-        - tests.cleaners.D
-        - tests.cleaners.E
-        - tests.cleaners.F
-        - tests.cleaners.G
-        - tests.cleaners.H
-        - tests.cleaners.I
-        - tests.cleaners.J
+        - tests.checkers.A
+        - tests.checkers.B
+        - tests.checkers.C
+        - tests.checkers.D
+        - tests.checkers.E
+        - tests.checkers.F
+        - tests.checkers.G
+        - tests.checkers.H
+        - tests.checkers.I
+        - tests.checkers.J
     SHADE:
-        - tests.cleaners.A
-        - tests.cleaners.B
-        - tests.cleaners.D
-        - tests.cleaners.H
-        - tests.cleaners.J
+        - tests.checkers.A
+        - tests.checkers.B
+        - tests.checkers.D
+        - tests.checkers.H
+        - tests.checkers.J
     RIG:
-        - tests.cleaners.A
-        - tests.cleaners.C
-        - tests.cleaners.E
+        - tests.checkers.A
+        - tests.checkers.C
+        - tests.checkers.E
     LIGHT:
-        - tests.cleaners.E
-        - tests.cleaners.D
-        - tests.cleaners.B
+        - tests.checkers.E
+        - tests.checkers.D
+        - tests.checkers.B
     DEFAULT: "MODEL"
 GRADES:
     FAILURE:

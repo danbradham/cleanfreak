@@ -1,12 +1,12 @@
 CONTEXT: MAYA
 SUITES:
     MODEL:
-        - cleanfreak.cleaners.mayacleaners.References
-        - cleanfreak.cleaners.mayacleaners.Intermediates
+        - cleanfreak.checkers.mayacheckers.References
+        - cleanfreak.checkers.mayacheckers.Intermediates
     SHADE:
-        - cleanfreak.cleaners.mayacleaners.References
+        - cleanfreak.checkers.mayacheckers.References
     RIG:
-        - cleanfreak.cleaners.mayacleaners.References
+        - cleanfreak.checkers.mayacheckers.References
     LIGHT:
-        - cleanfreak.cleaners.mayacleaners.References
+        - cleanfreak.checkers.mayacheckers.References
     DEFAULT: "MODEL"

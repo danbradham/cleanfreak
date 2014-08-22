@@ -3,7 +3,7 @@ from .ui import UI
 
 
 def get_maya_window():
-    '''Grabs the Maya's MainWindow QWidget instance. I feel enough software
+    '''Grabs Maya's MainWindow QWidget instance. I feel enough software
     has sufficiently switched over to PySide to simplify this function and
     stop supporting both PyQt and PySide. Little lazy with the maya import,
     allowing this module to be imported to a standard python interpreter.'''

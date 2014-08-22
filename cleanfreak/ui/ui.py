@@ -8,7 +8,7 @@ import sys
 import os
 from functools import partial
 from ..messages import (
-    StartCleaner, FinishCleaner, OnCheck, OnClean, CheckFirst, SuiteSet)
+    StartChecker, FinishChecker, OnCheck, OnFix, CheckFirst, SuiteSet)
 from ..shout import has_ears, hears
 
 
@@ -30,16 +30,16 @@ QProgressBar::chunk {{
 }}
 '''
 UNCHECKED = '''
-QWidget#CleanerListItem{background-color: rgb(50, 50, 50);}
-QWidget#CleanerListItem:hover{background-color: rgb(60, 60, 60);}
+QWidget#CheckerListItem{background-color: rgb(50, 50, 50);}
+QWidget#CheckerListItem:hover{background-color: rgb(60, 60, 60);}
 '''
 PASSED = '''
-QLabel#CleanerLabel{color: rgb(51, 190, 51);}
-QLabel#CleanerLabel:hover{color: rgb(56, 200, 56);}
+QLabel#CheckerLabel{color: rgb(51, 190, 51);}
+QLabel#CheckerLabel:hover{color: rgb(56, 200, 56);}
 '''
 FAILED = '''
-QLabel#CleanerLabel{color: rgb(198, 53, 34);}
-QLabel#CleanerLabel:hover{color: rgb(208, 58, 39);}
+QLabel#CheckerLabel{color: rgb(198, 53, 34);}
+QLabel#CheckerLabel:hover{color: rgb(208, 58, 39);}
 '''
 
 class TopAlignedList(QtGui.QVBoxLayout):
@@ -55,10 +55,10 @@ class TopAlignedList(QtGui.QVBoxLayout):
         self.setAlignment(widget, QtCore.Qt.AlignTop)
 
 
-class CleanerList(QtGui.QScrollArea):
+class CheckerList(QtGui.QScrollArea):
 
     def __init__(self, parent=None):
-        super(CleanerList, self).__init__(parent)
+        super(CheckerList, self).__init__(parent)
         self.setWidgetResizable(True)
         self.setEnabled(True)
 
@@ -126,34 +126,32 @@ class ClickableLabel(QtGui.QLabel):
             return
 
 
-class CleanerListItem(QtGui.QWidget):
+class CheckerListItem(QtGui.QWidget):
 
-    def __init__(self, cleaner, *args, **kwargs):
-        super(CleanerListItem, self).__init__(*args, **kwargs)
+    def __init__(self, checker, *args, **kwargs):
+        super(CheckerListItem, self).__init__(*args, **kwargs)
 
-        self.cleaner = cleaner
+        self.checker = checker
 
-        self.setObjectName("CleanerListItem")
+        self.setObjectName("CheckerListItem")
 
         self.grid = QtGui.QGridLayout()
         self.grid.setContentsMargins(0, 0, 0, 0)
         self.grid.setSpacing(0)
         self.setLayout(self.grid)
 
-        # self.status = CleanerStatus()
-        # self.status.mousePressEvent = self.mousePressEvent
         self.label = ClickableLabel()
-        self.label.setObjectName("CleanerLabel")
+        self.label.setObjectName("CheckerLabel")
         self.label.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.label.clicked.connect(self.toggle_message)
         self.label.setFixedHeight(24)
         self.desc = ClickableLabel()
-        self.desc.setObjectName("CleanerDesc")
+        self.desc.setObjectName("CheckerDesc")
         self.desc.setAlignment(QtCore.Qt.AlignTop|QtCore.Qt.AlignHCenter)
         self.desc.clicked.connect(self.toggle_message)
         self.desc.setFixedHeight(18)
         self.message = QtGui.QLabel()
-        self.message.setObjectName("CleanerMessage")
+        self.message.setObjectName("CheckerMessage")
         self.message.setAlignment(
             QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
         self.message.setWordWrap(True)
@@ -168,21 +166,21 @@ class CleanerListItem(QtGui.QWidget):
     def toggle_message(self):
         '''Show message if there is one, else hide.'''
         msg_visible = self.message.isVisible()
-        if self.cleaner.msg:
+        if self.checker.msg:
             if msg_visible:
                 self.message.hide()
             else:
                 self.message.show()
 
     def refr(self):
-        '''Refresh item from cleaner.'''
-        # self.status.set(self.cleaner.passed)
-        if self.cleaner.passed is not None:
-            style = PASSED if self.cleaner.passed else FAILED
+        '''Refresh item from checker.'''
+        # self.status.set(self.checker.passed)
+        if self.checker.passed is not None:
+            style = PASSED if self.checker.passed else FAILED
             self.setStyleSheet(style)
-        self.label.setText(self.cleaner.full_name)
-        self.desc.setText(self.cleaner.description)
-        self.message.setText(self.cleaner.msg)
+        self.label.setText(self.checker.full_name)
+        self.desc.setText(self.checker.description)
+        self.message.setText(self.checker.msg)
 
 class Toolbar(QtGui.QWidget):
 
@@ -217,7 +215,7 @@ class UI(QtGui.QDockWidget):
         self.setAllowedAreas(
             QtCore.Qt.LeftDockWidgetArea|
             QtCore.Qt.RightDockWidgetArea)
-        self.setWindowTitle("CleanFreak - Clean your shit up!")
+        self.setWindowTitle("cleanfreak: Clean your shit up!")
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
         self.widget = QtGui.QWidget(self)
@@ -245,23 +243,23 @@ class UI(QtGui.QDockWidget):
 
         self.check_button = QtGui.QPushButton()
         self.check_button.setText("Run Checks")
-        self.check_button.clicked.connect(self.app.checks)
+        self.check_button.clicked.connect(self.app.run_checks)
         self.check_button.setObjectName("CheckButton")
 
-        self.clean_button = QtGui.QPushButton()
-        self.clean_button.setText("Clean it up!")
-        self.clean_button.clicked.connect(self.app.cleans)
-        self.clean_button.setObjectName("CleanButton")
+        self.fix_button = QtGui.QPushButton()
+        self.fix_button.setText("Clean it up!")
+        self.fix_button.clicked.connect(self.app.run_fixes)
+        self.fix_button.setObjectName("FixButton")
 
         #self.toolbar.addWidget(self.suite_label, 0, 1)
         self.toolbar.addWidget(self.context_opts, 0, 2)
         self.toolbar.addWidget(self.check_button, 0, 3)
-        self.toolbar.addWidget(self.clean_button, 0, 4)
+        self.toolbar.addWidget(self.fix_button, 0, 4)
 
-        self.cleaner_list = CleanerList()
-        self.cleaner_list.scrollWidget.setAttribute(
+        self.checker_list = CheckerList()
+        self.checker_list.scrollWidget.setAttribute(
             QtCore.Qt.WA_StyledBackground, True)
-        self.cleaner_list.scrollWidget.setObjectName('Main')
+        self.checker_list.scrollWidget.setObjectName('Main')
 
         self.progress_grd = QtGui.QLabel("Run Your Checks!")
         self.progress_grd.setAlignment(QtCore.Qt.AlignHCenter)
@@ -277,10 +275,10 @@ class UI(QtGui.QDockWidget):
         self.grid.addWidget(self.progress_grd, 0, 0)
         self.grid.addWidget(self.progress_bar, 1, 0)
         self.grid.addWidget(self.progress_msg, 2, 0)
-        self.grid.addWidget(self.cleaner_list, 3, 0)
+        self.grid.addWidget(self.checker_list, 3, 0)
 
 
-        self.cleaner_items = {}
+        self.checker_items = {}
         self.context_opts.addItems(self.app.config["SUITES"].keys())
         self.context_opts.currentIndexChanged.connect(self.set_context)
         self.load_context()
@@ -290,16 +288,16 @@ class UI(QtGui.QDockWidget):
 
     @hears(SuiteSet)
     def load_context(self):
-        if self.cleaner_items:
-            for ci in self.cleaner_items.values():
+        if self.checker_items:
+            for ci in self.checker_items.values():
                 ci.setParent(None)
                 del(ci)
-            self.cleaner_items = {}
+            self.checker_items = {}
 
-        for c in self.app.cleaners:
-            cleaner_item = CleanerListItem(c)
-            self.cleaner_list.addWidget(cleaner_item)
-            self.cleaner_items[c.full_name] = cleaner_item
+        for c in self.app.checkers:
+            checker_item = CheckerListItem(c)
+            self.checker_list.addWidget(checker_item)
+            self.checker_items[c.full_name] = checker_item
 
         suite_index = self.context_opts.findText(self.app.suite_name)
         self.context_opts.setCurrentIndex(suite_index)
@@ -313,16 +311,16 @@ class UI(QtGui.QDockWidget):
     def set_context(self):
         self.app.set_suite(self.context_opts.currentText())
 
-    @hears(StartCleaner)
-    def start_cleaner(self, message):
+    @hears(StartChecker)
+    def start_checker(self, message):
         self.progress_bar.show()
         self.progress_msg.show()
         self.progress_grd.setText("Running Checkers...")
         self.progress_bar.setValue(0)
         self.progress_msg.setText("Starting Checks...")
 
-    @hears(FinishCleaner)
-    def finish_cleaner(self, grade):
+    @hears(FinishChecker)
+    def finish_checker(self, grade):
         self.progress_grd.setText(grade.title)
         self.progress_bar.setValue(grade.percent)
         self.progress_msg.setText(grade.message)
@@ -330,14 +328,14 @@ class UI(QtGui.QDockWidget):
     @hears(OnCheck)
     def check(self, c, grade):
         self.progress_msg.setText("{0} checking".format(c.full_name))
-        self.cleaner_items[c.full_name].refr()
+        self.checker_items[c.full_name].refr()
         self.progress_bar.setStyleSheet(BAR.format(*grade.color))
         self.progress_bar.setValue(grade.percent)
 
-    @hears(OnClean)
-    def clean(self, c, grade):
-        self.progress_msg.setText("{0} cleaning".format(c.full_name))
-        self.cleaner_items[c.full_name].refr()
+    @hears(OnFix)
+    def fix(self, c, grade):
+        self.progress_msg.setText("{0} fixing".format(c.full_name))
+        self.checker_items[c.full_name].refr()
         self.progress_bar.setStyleSheet(BAR.format(*grade.color))
         self.progress_bar.setValue(grade.percent)
 
@@ -347,7 +345,7 @@ class UI(QtGui.QDockWidget):
         self.progress_msg.setText(message)
 
     def refr(self):
-        for ci in self.cleaner_items.values():
+        for ci in self.checker_items.values():
             ci.refr()
 
     @classmethod

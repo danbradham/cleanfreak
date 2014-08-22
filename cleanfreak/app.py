@@ -3,9 +3,8 @@ from functools import partial
 import os
 import random
 from .config import Config, load_yaml
-from .runner import Runner
 from .utils import collect
-from .messages import (StartCleaner, FinishCleaner, OnCheck, OnClean,
+from .messages import (StartChecker, FinishChecker, OnCheck, OnFix,
                        CheckFirst, SuiteSet, Started)
 from .shout import shout
 
@@ -31,7 +30,7 @@ class Grade(object):
     @classmethod
     def create(cls, app):
         num_grades = len(app.config['GRADES']['ORD'])
-        value = app.successes / app.cleaner_count
+        value = app.successes / app.checker_count
         grade_index = int(value * (num_grades - 1))
         grade_key = app.config['GRADES']['ORD'][grade_index]
         grade_info = app.config['GRADES'][grade_key]
@@ -53,10 +52,9 @@ class CleanFreak(object):
             cfg_file = rel_path if os.path.exists(rel_path) else cfg_file
             self.config.from_file(cfg_file)
 
-        self.runner = Runner()
-        self.cleaners = None
+        self.checkers = None
         self.suite = None
-        self.cleaner_count = 0
+        self.checker_count = 0
         self.ui = None
         self._grade = None
         self.checked = False
@@ -67,52 +65,52 @@ class CleanFreak(object):
 
         shout(Started, self)
 
-    def checks(self):
+    def run_checks(self):
         '''Runs checks while emitting emits three types of :class:`Message` s.
 
-        - :class:`StartCleaner` is emitted prior to running checks.
-        - :class:`OnCheck` is emitted after each check with the cleaner and a
+        - :class:`StartChecker` is emitted prior to running checks.
+        - :class:`OnCheck` is emitted after each check with the checker and a
         - grade objects.
-        - :class:`FinishCleaner` is emitted after all checks are completed
+        - :class:`FinishChecker` is emitted after all checks are completed
         with the final grade object.'''
 
         self._grade = None
-        shout(StartCleaner, 'Running Checks...')
+        shout(StartChecker, 'Running Checks...')
 
-        for c in self.cleaners:
+        for c in self.checkers:
             c._check()
             grade = Grade.create(self)
             shout(OnCheck, c, grade)
 
         self._grade = Grade.create(self)
         self.checked = True
-        shout(FinishCleaner, self._grade)
+        shout(FinishChecker, self._grade)
 
-    def cleans(self):
-        '''Runs cleans while emitting emits three types of :class:`Message` s.
+    def run_fixes(self):
+        '''Runs fixes while emitting emits three types of :class:`Message` s.
 
-        - :class:`StartCleaner` is emitted prior to running checks.
-        - :class:`OnClean` is emitted after each check with the cleaner and a
+        - :class:`StartChecker` is emitted prior to running checks.
+        - :class:`OnFix` is emitted after each check with the checker and a
         - grade objects.
-        - :class:`FinishCleaner` is emitted after all checks are completed
+        - :class:`FinishChecker` is emitted after all checks are completed
         with the final grade object.'''
         if not self.checked:
             shout(CheckFirst, "You've got to run checks first!")
             return
 
-        shout(StartCleaner, 'Running Cleans...')
+        shout(StartChecker, 'Running Fixes...')
 
-        for c in self.cleaners:
-            c._clean()
+        for c in self.checkers:
+            c._fix()
             grade = Grade.create(self)
-            shout(OnClean, c, grade)
+            shout(OnFix, c, grade)
 
         self._grade = Grade.create(self)
-        shout(FinishCleaner, self._grade)
-        self.checks()
+        shout(FinishChecker, self._grade)
+        self.run_checks()
 
     def set_suite(self, suite):
-        '''Sets the suite to the specified value. Collects all cleaners listed
+        '''Sets the suite to the specified value. Collects all checkers listed
         in the suites configuration. If the suite is not in your configuration,
         raisees a KeyError.
 
@@ -123,8 +121,8 @@ class CleanFreak(object):
 
         self.suite_name = suite
         self.suite = self.config['SUITES'][suite]
-        self.cleaners = collect(self.suite)
-        self.cleaner_count = len(self.cleaners)
+        self.checkers = collect(self.suite)
+        self.checker_count = len(self.checkers)
         self.checked = False
         shout(SuiteSet)
 
@@ -137,7 +135,7 @@ class CleanFreak(object):
         '''Number of successful checks.'''
 
         if not self._grade:
-            self._successes = len([c for c in self.cleaners if c.passed])
+            self._successes = len([c for c in self.checkers if c.passed])
         return self._successes
 
     @property

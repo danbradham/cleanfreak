@@ -1,20 +1,20 @@
 from .shout import Message
 
 
-class StartCleaner(Message):
+class StartChecker(Message):
     '''Shouted prior to running checks or cleans.'''
 
 
-class FinishCleaner(Message):
+class FinishChecker(Message):
     '''Shouted after running checks or cleans.'''
 
 
 class OnCheck(Message):
-    '''Shouted for each Cleaner.check(). Passes cleaner and a Grade object.'''
+    '''Shouted for each Checker.check(). Passes Checker and a Grade object.'''
 
 
-class OnClean(Message):
-    '''Shouted for each Cleaner.check(). Passes cleaner and a Grade object.'''
+class OnFix(Message):
+    '''Shouted for each Checker.check(). Passes Checker and a Grade object.'''
 
 
 class CheckFirst(Message):

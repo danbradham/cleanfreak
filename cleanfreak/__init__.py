@@ -7,4 +7,4 @@ __description__ = "Sanity checks and grades for CG production."
 
 
 from .app import CleanFreak
-from .cleaner import Cleaner
+from .checker import Checker
