@@ -13,6 +13,7 @@ REL = partial(os.path.join, os.path.dirname(__file__))
 
 
 class Grade(object):
+    ''''''
 
     def __init__(self, title, message, color, value):
         self.title = title
@@ -43,6 +44,7 @@ class Grade(object):
 
 
 class CleanFreak(object):
+    '''The application'''
 
     def __init__(self, cfg_file=None):
         defaults = load_yaml(REL('conf', 'defaults.yml'))
@@ -66,12 +68,13 @@ class CleanFreak(object):
         shout(Started, self)
 
     def run_checks(self):
-        '''Runs checks while emitting emits three types of :class:`Message` s.
+        '''Executes :meth:`check` for each :class:`Checker` in the current
+        suite. Emits three :class:`Message` s.
 
-        - :class:`StartChecker` is emitted prior to running checks.
-        - :class:`OnCheck` is emitted after each check with the checker and a
-        - grade objects.
-        - :class:`FinishChecker` is emitted after all checks are completed
+         - :class:`StartChecker` is emitted prior to running checks.
+         - :class:`OnCheck` is emitted after each check with the checker and a
+         - grade objects.
+         - :class:`FinishChecker` is emitted after all checks are completed
         with the final grade object.'''
 
         self._grade = None
@@ -87,12 +90,13 @@ class CleanFreak(object):
         shout(FinishChecker, self._grade)
 
     def run_fixes(self):
-        '''Runs fixes while emitting emits three types of :class:`Message` s.
+        '''Executes :meth:`fix` for each :class:`Checker` in the current
+        suite. Emits three :class:`Message` s.
 
-        - :class:`StartChecker` is emitted prior to running checks.
-        - :class:`OnFix` is emitted after each check with the checker and a
-        - grade objects.
-        - :class:`FinishChecker` is emitted after all checks are completed
+         - :class:`StartChecker` is emitted prior to running checks.
+         - :class:`OnFix` is emitted after each check with the checker and a
+         - grade objects.
+         - :class:`FinishChecker` is emitted after all checks are completed
         with the final grade object.'''
         if not self.checked:
             shout(CheckFirst, "You've got to run checks first!")
@@ -111,8 +115,8 @@ class CleanFreak(object):
 
     def set_suite(self, suite):
         '''Sets the suite to the specified value. Collects all checkers listed
-        in the suites configuration. If the suite is not in your configuration,
-        raisees a KeyError.
+        in the suites configuration. Raises a KeyError if the squite is not in
+        your configuration.
 
         :param suite: The key of your suite in config['SUITES']'''
 
@@ -127,12 +131,12 @@ class CleanFreak(object):
         shout(SuiteSet)
 
     def list_suites(self):
-        '''Lists the names of all the configured suites.'''
+        '''Returns a list suite names.'''
         return self.config['SUITES'].keys()
 
     @property
     def successes(self):
-        '''Number of successful checks.'''
+        '''Returns the number of successful checks.'''
 
         if not self._grade:
             self._successes = len([c for c in self.checkers if c.passed])
