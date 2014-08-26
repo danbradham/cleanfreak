@@ -13,9 +13,16 @@ REL = partial(os.path.join, os.path.dirname(__file__))
 
 
 class Grade(object):
-    ''''''
+    '''Grade data container.
+
+    :attr title: Grade title
+    :attr message: Grade message
+    :attr color: Grade color (rgb tuple)
+    :attr value: Grade value (float 0-1)
+    :attr percent: Grade percent (float 0-100)'''
 
     def __init__(self, title, message, color, value):
+
         self.title = title
         self.message = message
         self.color = color
@@ -24,12 +31,18 @@ class Grade(object):
 
     @property
     def percent(self):
+
         if self._percent is None:
             self._percent = self.value * 100
         return self._percent
 
     @classmethod
     def create(cls, app):
+        '''Calculates a Grade based on the number of successes and total
+        checkers. Uses CleanFreaks config to get a title, message and color.
+
+        :param app: A CleanFreak instance'''
+
         num_grades = len(app.config['GRADES']['ORD'])
         value = app.successes / app.checker_count
         grade_index = int(value * (num_grades - 1))
@@ -44,9 +57,12 @@ class Grade(object):
 
 
 class CleanFreak(object):
-    '''The application'''
+    ''':class:`CleanFreak` collects and runs :class:`Checker` :meth:`check`
+    and :meth:`fix` methods based on the configuration file passed in
+    instantiation.'''
 
     def __init__(self, cfg_file=None):
+
         defaults = load_yaml(REL('conf', 'defaults.yml'))
         self.config = Config(defaults)
         if cfg_file:
@@ -98,6 +114,7 @@ class CleanFreak(object):
          - grade objects.
          - :class:`FinishChecker` is emitted after all checks are completed
         with the final grade object.'''
+
         if not self.checked:
             shout(CheckFirst, "You've got to run checks first!")
             return
@@ -132,6 +149,7 @@ class CleanFreak(object):
 
     def list_suites(self):
         '''Returns a list suite names.'''
+
         return self.config['SUITES'].keys()
 
     @property
@@ -152,8 +170,9 @@ class CleanFreak(object):
         return self._grade
 
     def show(self):
-        '''Pulls in a ui context and creates the ui. You must have a "CONTEXT"
-        key in your configuration.'''
+        '''Shows a PySide UI to control the app. Parenting of the UI is handled
+        by different subclasses of :class:`UI`. You can set the context using
+        the "CONTEXT" key of your configuration.'''
 
         if not self.ui:
             from . import ui

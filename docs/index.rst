@@ -1,6 +1,6 @@
 .. index
 
-cleanfreak
+CleanFreak
 ==========
 A framework for running sanity checks and fixes.
 

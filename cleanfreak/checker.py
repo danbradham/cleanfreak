@@ -6,8 +6,8 @@ ABC = ABCMeta(str("ABC"), (), {}) # 2n3 compatible metaclassing
 
 
 class Checker(ABC):
-    '''Abstract BaseClass for all Checkers. All Checkers inherit from this
-    class. You must override the following attributes and methods:
+    '''Abstract Base Class for all Checkers. You must override the following
+    attributes and methods:
 
     :attr full_name: The full name of the Checker
     :attr description: A description of the issue the Checker checks
