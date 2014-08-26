@@ -18,24 +18,27 @@ packages = [
     'cleanfreak.ui'
 ]
 
+package_data = {
+    '': ['LICENSE', 'README'],
+    'cleanfreak': ['conf/*.*']
+}
 
-with open("README.rst") as f:
+
+with open('README.rst') as f:
     readme = f.read()
 
 
 setup(
-    name="cleanfreak",
+    name='cleanfreak',
     version=cleanfreak.__version__,
     description=cleanfreak.__description__,
     long_description=readme,
     author=cleanfreak.__author__,
     author_email=cleanfreak.__email__,
     url=cleanfreak.__url__,
-    license="MIT",
+    license='MIT',
     packages=packages,
-    package_data={
-        '': ['LICENSE', 'README'],
-        'cleanfreak': ['conf/*.yml']},
+    package_data=package_data,
     package_dir={'cleanfreak': 'cleanfreak'},
     include_package_data=True,
     classifiers=(
