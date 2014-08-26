@@ -14,7 +14,8 @@ if sys.argv[-1] == 'cheeseit!':
 
 packages = [
     'cleanfreak',
-    'cleanfreak.cleaners'
+    'cleanfreak.checkers',
+    'cleanfreak.ui'
 ]
 
 
@@ -32,7 +33,9 @@ setup(
     url=cleanfreak.__url__,
     license="MIT",
     packages=packages,
-    package_data={'': ['LICENSE', 'README']},
+    package_data={
+        '': ['LICENSE', 'README'],
+        'cleanfreak': ['conf/*.yml']},
     package_dir={'cleanfreak': 'cleanfreak'},
     include_package_data=True,
     classifiers=(
