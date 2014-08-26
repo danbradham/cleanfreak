@@ -2,3 +2,4 @@ include README.rst
 include LICENSE
 include cleanfreak/conf/defaults.yml
 include cleanfreak/conf/maya.yml
+include requirements.txt
