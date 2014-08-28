@@ -4,7 +4,7 @@ CleanFreak
 A sanity checking framework for cg production, fully customizable through yaml configuration files. Use CleanFreak to check for and fix various issues in a scene prior publication.
 
 .. image:: docs/static/ui_preview.png
-
+    :align: center
 
 ------------
 Installation

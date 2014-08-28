@@ -2,6 +2,10 @@
 
 import sys
 import os
+mod_path = os.path.abspath(os.path.join(os.path.dirname(__file__),'../'))
+sys.path.insert(0, mod_path)
+import cleanfreak
+
 
 extensions = [
     'sphinx.ext.autodoc',
@@ -14,8 +18,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 project = u'cleanfreak'
 copyright = u'2014, Dan Bradham'
-version = '0.1.0'
-release = '0.1.0'
+version = cleanfreak.__version__
+release = cleanfreak.__version__
 exclude_patterns = ['build']
 pygments_style = 'sphinx'
 html_theme = 'default'
