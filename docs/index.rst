@@ -25,6 +25,6 @@ Contents
 --------
 .. toctree::
    :maxdepth: 3
-   Getting Started
-   Configuration
-   API
+   getstarted
+   config
+   api
