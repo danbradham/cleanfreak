@@ -24,7 +24,8 @@ If you need pip get it here <http://pip.readthedocs.org/en/latest/installing.htm
 Contents
 --------
 .. toctree::
-   :maxdepth: 3
+   :maxdepth:
+
    getstarted
    config
    api
