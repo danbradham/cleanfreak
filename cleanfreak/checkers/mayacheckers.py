@@ -97,9 +97,9 @@ class UngroupedGeo(Checker):
         self.ungrouped = []
 
     def check(self):
-        nodes = pm.ls(dag=True)
+        nodes = [pm.listRelatives(n, parent=True) for n in pm.ls(type="mesh")]
         for node in nodes:
-            if node.isIntermediate() and not node.listConnections():
+            if not pm.listRelatives(node, parent=True):
                 self.ungrouped.append(node)
 
         if self.ungrouped:
@@ -111,11 +111,52 @@ class UngroupedGeo(Checker):
         return True, self.pass_msg
 
     def fix(self):
-        pm.group(self.ungrouped)
+        pm.group(self.ungrouped, name="GEO_GROUP_RENAME_ME")
         msg = self.fix_msg.format(
             len(self.ungrouped),
             ", ".join(self.ungrouped))
 
         self.ungrouped = []
+
+        return True, msg
+
+
+class HasUVs(Checker):
+
+    full_name = "Has UVs"
+    description = "Check if all meshes have UVs"
+    fail_msg = (
+        "Found {0} meshes without UVs:\n{1}\n"
+        "These will be automatic mapped upon fixing.")
+    fix_msg = "Automapped {0} meshes:\n{1}"
+    pass_msg = "All your meshes have UVs. Congrats!"
+
+    def setup(self):
+        self.non_uved = []
+
+    def check(self):
+        nodes = [pm.listRelatives(n, parent=True) for n in pm.ls(type="mesh")]
+        for node in nodes:
+            num_components = pm.polyEvaluate(node, vertex=True, uvcoord=True)
+            if num_components['uvcoord'] < num_components['vertex']:
+                self.non_uved.append(node)
+
+        if self.non_uved:
+            msg = self.fail_msg.format(
+                len(self.non_uved),
+                ", ".join([str(node) for node in self.non_uved]))
+            return False, msg
+
+        return True, self.pass_msg
+
+    def fix(self):
+        for node in self.non_uved:
+            pm.polyAutoProjection(node)
+
+        msg = self.fix_msg.format(
+            len(self.non_uved),
+            ", ".join(self.non_uved))
+
+        self.non_uved = []
 
         return True, msg

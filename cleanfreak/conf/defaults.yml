@@ -38,5 +38,4 @@ GRADES:
         MESSAGES:
             - 'You are so good at whatever you did!'
             - 'A natural, that is what you are!'
-            - 'I am so hard.'
     ORD: [FAILURE, TERRIBLE, BAD, NOT GOOD, SO SO, SOLID, PERFECT]

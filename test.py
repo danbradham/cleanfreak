@@ -1,4 +1,4 @@
 from cleanfreak import CleanFreak
 
-app = CleanFreak("tests/config.yml")
-app.show()
+cf = CleanFreak("tests/config.yml")
+cf.show()
