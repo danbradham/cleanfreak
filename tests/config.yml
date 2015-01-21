@@ -1,31 +1,3 @@
-CONTEXT: DEFAULT
-SUITES:
-    MODEL:
-        - tests.checkers.A
-        - tests.checkers.B
-        - tests.checkers.C
-        - tests.checkers.D
-        - tests.checkers.E
-        - tests.checkers.F
-        - tests.checkers.G
-        - tests.checkers.H
-        - tests.checkers.I
-        - tests.checkers.J
-    SHADE:
-        - tests.checkers.A
-        - tests.checkers.B
-        - tests.checkers.D
-        - tests.checkers.H
-        - tests.checkers.J
-    RIG:
-        - tests.checkers.A
-        - tests.checkers.C
-        - tests.checkers.E
-    LIGHT:
-        - tests.checkers.E
-        - tests.checkers.D
-        - tests.checkers.B
-    DEFAULT: "MODEL"
 GRADES:
     FAILURE:
         COLOR: [198, 53, 34]
@@ -62,3 +34,34 @@ GRADES:
             - 'You are so good at whatever you did!'
             - 'A natural, that is what you are!'
     ORD: [FAILURE, TERRIBLE, BAD, NOT GOOD, SO SO, SOLID, PERFECT]
+
+CONTEXTS:
+    TEST:
+        SUITES:
+            MODEL:
+                - checkers.A
+                - checkers.B
+                - checkers.C
+                - checkers.D
+                - checkers.E
+                - checkers.F
+                - checkers.G
+                - checkers.H
+                - checkers.I
+                - checkers.J
+            SHADE:
+                - checkers.A
+                - checkers.B
+                - checkers.D
+                - checkers.H
+                - checkers.J
+            RIG:
+                - checkers.A
+                - checkers.C
+                - checkers.E
+            LIGHT:
+                - checkers.E
+                - checkers.D
+                - checkers.B
+            DEFAULT: "MODEL"
+        UI: "DEFAULT"

@@ -1,5 +1,5 @@
 import pymel.core as pm
-from ..checker import Checker
+from cleanfreak.checker import Checker
 
 
 class References(Checker):

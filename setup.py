@@ -14,7 +14,6 @@ if sys.argv[-1] == 'cheeseit!':
 
 packages = [
     'cleanfreak',
-    'cleanfreak.checkers',
     'cleanfreak.ui'
 ]
 
@@ -29,27 +28,27 @@ with open('README.rst') as f:
 
 
 setup(
-    name='cleanfreak',
+    name=cleanfreak.__title__,
     version=cleanfreak.__version__,
     description=cleanfreak.__description__,
     long_description=readme,
     author=cleanfreak.__author__,
     author_email=cleanfreak.__email__,
     url=cleanfreak.__url__,
-    license='MIT',
+    license=cleanfreak.__license__,
     packages=packages,
     package_data=package_data,
     package_dir={'cleanfreak': 'cleanfreak'},
     include_package_data=True,
     classifiers=(
-        "Development Status :: 3 - Alpha",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
-        "Natural Language :: English",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
-        "Topic :: Software Development :: Libraries :: Python Modules",
+        'Topic :: Software Development :: Libraries :: Python Modules',
     ),
 )

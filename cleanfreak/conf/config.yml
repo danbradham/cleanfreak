@@ -1,4 +1,3 @@
-CONTEXT: DEFAULT
 GRADES:
     FAILURE:
         COLOR: [198, 53, 34]
@@ -39,3 +38,22 @@ GRADES:
             - 'You are so good at whatever you did!'
             - 'A natural, that is what you are!'
     ORD: [FAILURE, TERRIBLE, BAD, NOT GOOD, SO SO, SOLID, PERFECT]
+
+CONTEXTS:
+    MAYA:
+        SUITES:
+            MODEL:
+                - mayacheckers.References
+                - mayacheckers.IntermediateObjects
+                - mayacheckers.UngroupedGeo
+                - mayacheckers.HasUVs
+            SHADE:
+                - mayacheckers.References
+            RIG:
+                - mayacheckers.References
+            LIGHT:
+                - mayacheckers.References
+            ANIMATE:
+                - mayacheckers.References
+            DEFAULT: "MODEL"
+        UI: "MAYA"

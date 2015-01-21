@@ -2,6 +2,7 @@ from __future__ import division
 from functools import partial
 import os
 import random
+import shutil
 from .config import Config, load_yaml
 from .utils import collect
 from .messages import (StartChecker, FinishChecker, OnCheck, OnFix,
@@ -9,7 +10,7 @@ from .messages import (StartChecker, FinishChecker, OnCheck, OnFix,
 from .shout import shout
 
 
-REL = partial(os.path.join, os.path.dirname(__file__))
+rel_path = partial(os.path.join, os.path.dirname(__file__))
 
 
 class Grade(object):
@@ -58,17 +59,35 @@ class Grade(object):
 
 class CleanFreak(object):
     ''':class:`CleanFreak` collects and runs :class:`Checker` :meth:`check`
-    and :meth:`fix` methods based on the configuration file passed in
-    instantiation.'''
+    and :meth:`fix` methods based on the config file in your configuration
+    root directory. Configuration root is looked up in the following order.
 
-    def __init__(self, cfg_file=None):
+     * Parameter cfg_root passed to CleanFreak on instantiation
+     * Environment variable CLEANFREAK_CFG
+     * ~/cleanfreak
 
-        defaults = load_yaml(REL('conf', 'defaults.yml'))
-        self.config = Config(defaults)
-        if cfg_file:
-            rel_path = REL('conf', cfg_file)
-            cfg_file = rel_path if os.path.exists(rel_path) else cfg_file
-            self.config.from_file(cfg_file)
+    If the directory does not exist the default config in cleanfreak/conf is
+    copied to the directory. Providing you with a default configuration to
+    extend. The configuration root directory is then added to your pythonpath
+    allowing you to load python modules from there. This is the best place to
+    keep a module containing :class:`Checker` objects.
+
+    :param cfg_root: Optional configuration root directory.'''
+
+    def __init__(self, context=None, cfg_root=None):
+
+        self.config = Config()
+
+        if cfg_root:
+            os.environ['CLEANFREAK_CFG'] = cfg_root
+        else:
+            cfg_root = os.environ.setdefault(
+            'CLEANFREAK_CFG', os.path.expanduser('~/cleanfreak'))
+
+        if not os.path.exists(cfg_root):
+            shutil.copytree(rel_path('conf'), cfg_root)
+
+        self.config.from_env('CLEANFREAK_CFG')
 
         self.checkers = None
         self.suite = None
@@ -77,8 +96,9 @@ class CleanFreak(object):
         self._grade = None
         self.checked = False
 
-        if "DEFAULT" in self.config.get('SUITES', []):
-            suite = self.config['SUITES'].pop('DEFAULT')
+        self.ctx = self.config['CONTEXTS'][context]
+        if "DEFAULT" in self.ctx.get('SUITES', []):
+            suite = self.ctx['SUITES'].pop('DEFAULT')
             self.set_suite(suite)
 
         shout(Started, self)
@@ -137,11 +157,11 @@ class CleanFreak(object):
 
         :param suite: The key of your suite in config['SUITES']'''
 
-        if not suite in self.config['SUITES']:
+        if not suite in self.ctx['SUITES']:
             raise KeyError('Unconfigured suite: {0}'.format(suite))
 
         self.suite_name = suite
-        self.suite = self.config['SUITES'][suite]
+        self.suite = self.ctx['SUITES'][suite]
         self.checkers = collect(self.suite)
         self.checker_count = len(self.checkers)
         self.checked = False
@@ -150,7 +170,7 @@ class CleanFreak(object):
     def list_suites(self):
         '''Returns a list suite names.'''
 
-        return self.config['SUITES'].keys()
+        return self.ctx['SUITES'].keys()
 
     @property
     def successes(self):
@@ -176,6 +196,6 @@ class CleanFreak(object):
 
         if not self.ui:
             from . import ui
-            UI = ui.get(self.config['CONTEXT'])
+            UI = ui.get(self.ctx['UI'])
             self.ui = UI.create(self)
         self.ui.show()

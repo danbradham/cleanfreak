@@ -279,7 +279,7 @@ class UI(QtGui.QDockWidget):
 
 
         self.checker_items = {}
-        self.context_opts.addItems(self.app.config["SUITES"].keys())
+        self.context_opts.addItems(self.app.ctx["SUITES"].keys())
         self.context_opts.currentIndexChanged.connect(self.set_context)
         self.load_context()
 

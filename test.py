@@ -1,4 +1,4 @@
 from cleanfreak import CleanFreak
 
-cf = CleanFreak("tests/config.yml")
+cf = CleanFreak(context="TEST", cfg_root='tests')
 cf.show()
