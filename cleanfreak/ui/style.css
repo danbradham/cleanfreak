@@ -11,7 +11,7 @@ QWidget#Scroll{
 }
 
 QWidget#Toolbar{
-    background-color: rgb(45, 45, 45);
+    background-color: rgb(40, 40, 40);
 }
 
 QLabel#CheckerLabel{
@@ -58,7 +58,7 @@ QWidget#Main{
 
 QProgressBar {
      border: 2px solid rgb(45, 45, 45);
-     border-radius: 5px;
+     border-radius: 0px;
      text-align: center;
      font-size: 24;
      background-color: rgb(45, 45, 45);
@@ -77,7 +77,7 @@ QPushButton#CheckButton{
     border: 0;
     border-bottom: 2px solid rgb(55, 55, 55);
     padding: 6px;
-    border-radius: 5px;
+    border-radius: 0px;
 }
 
 QPushButton#CheckButton:hover{
@@ -91,7 +91,7 @@ QPushButton#FixButton{
     border: 0;
     border-bottom: 2px solid rgb(178, 33, 14);
     padding: 6px;
-    border-radius: 5px;
+    border-radius: 0px;
 }
 
 QPushButton#FixButton:hover{
@@ -108,8 +108,12 @@ QComboBox {
     height: 26;
     width: 75;
     padding-left: 10;
-    border-radius: 5px;
+    border-radius: 0px;
     border-bottom: 2px solid rgb(55, 55, 55);
+}
+
+QComboBox:hover {
+    background: rgb(75, 75, 75);
 }
 
 QComboBox::drop-down{
@@ -119,7 +123,7 @@ QComboBox::drop-down{
     border-left: 6px solid rgb(255,255,255,0);
     border-bottom: 0px solid rgb(235,235,235, 0);
     margin-right: 4px;
-    background: rgb(65, 65, 65);
+    background: rgb(65, 65, 65, 0);
 }
 
 QComboBox QAbstractItemView{
@@ -227,4 +231,8 @@ QScrollBar::top-arrow:vertical, QScrollBar::bottom-arrow:vertical {
 
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
     background: rgb(255,255,255,0);
+}
+
+QWidget#WindowHeader{
+    background: rgb(40, 40, 40);
 }

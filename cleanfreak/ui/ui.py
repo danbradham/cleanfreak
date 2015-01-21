@@ -192,12 +192,20 @@ class Toolbar(QtGui.QWidget):
 
         self.layout = QtGui.QGridLayout()
         self.layout.setColumnStretch(0, 1)
-        self.layout.setColumnStretch(5, 1)
         self.setLayout(self.layout)
         self.setFixedHeight(50)
 
     def addWidget(self, *args, **kwargs):
         self.layout.addWidget(*args, **kwargs)
+
+
+class WindowHeader(QtGui.QLabel):
+
+    def __init__(self, img, parent=None):
+        super(WindowHeader, self).__init__(parent)
+        self.setObjectName("WindowHeader")
+        self.setPixmap(QtGui.QPixmap(QtGui.QImage(img)))
+
 
 @has_ears
 class UI(QtGui.QDockWidget):
@@ -225,7 +233,8 @@ class UI(QtGui.QDockWidget):
 
         self.top_grid = QtGui.QGridLayout()
         self.top_grid.setContentsMargins(0, 0, 0, 0)
-        self.top_grid.setRowStretch(0, 1)
+        self.top_grid.setRowStretch(1, 1)
+        self.top_grid.setVerticalSpacing(0)
         self.widget.setLayout(self.top_grid)
 
         self.grid = QtGui.QGridLayout()
@@ -233,7 +242,9 @@ class UI(QtGui.QDockWidget):
         self.grid.setRowStretch(3, 1)
         self.grid.setSpacing(10)
 
+        self.header = WindowHeader(REL('cleanfreak.png'))
         self.toolbar = Toolbar(self.widget)
+
         self.top_grid.addWidget(self.toolbar, 0, 0)
         self.top_grid.addLayout(self.grid, 1, 0)
 
@@ -251,10 +262,10 @@ class UI(QtGui.QDockWidget):
         self.fix_button.clicked.connect(self.app.run_fixes)
         self.fix_button.setObjectName("FixButton")
 
-        #self.toolbar.addWidget(self.suite_label, 0, 1)
-        self.toolbar.addWidget(self.context_opts, 0, 2)
-        self.toolbar.addWidget(self.check_button, 0, 3)
-        self.toolbar.addWidget(self.fix_button, 0, 4)
+        self.toolbar.addWidget(self.header, 0, 0)
+        self.toolbar.addWidget(self.context_opts, 0, 1)
+        self.toolbar.addWidget(self.check_button, 0, 2)
+        self.toolbar.addWidget(self.fix_button, 0, 3)
 
         self.checker_list = CheckerList()
         self.checker_list.scrollWidget.setAttribute(

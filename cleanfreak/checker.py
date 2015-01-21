@@ -19,9 +19,9 @@ class Checker(ABC):
 
     full_name = None
     description = None
-    fail_msg = "Failed!"
-    pass_msg = "Passed!"
-    fix_msg = "Fixed!"
+    fail_msg = 'Failed!'
+    pass_msg = 'Passed!'
+    fix_msg = 'Fixed!'
 
     def __init__(self):
         self.passed = None
