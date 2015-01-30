@@ -1,9 +1,26 @@
 QWidget#CheckerListItem{
     background-color: rgb(50, 50, 50);
+    border-top: 1px solid rgb(65, 65, 65);
+    border-bottom: 1px solid rgb(35, 35, 35);
 }
-
 QWidget#CheckerListItem:hover{
     background-color: rgb(60, 60, 60);
+    border-top: 1px solid rgb(75, 75, 75);
+    border-bottom: 1px solid rgb(45, 45, 45);
+}
+
+QPushButton#CheckerSelect{
+    border: 2px dotted rgb(200, 200, 200);
+    background: rgb(60, 60, 60);
+    padding: 3px solid;
+    border-radius: 2px;
+}
+
+QPushButton#CheckerSelect:hover{
+    border: 2px dotted rgb(235, 235, 235);
+    background: rgb(60, 60, 60);
+    padding: 3px solid;
+    border-radius: 2px;
 }
 
 QWidget#Scroll{
@@ -21,16 +38,14 @@ QLabel#CheckerLabel{
 
 QLabel#CheckerDesc{
     color: rgb(200, 200, 200);
-    font-size: 10px;
+    font-size: 12px;
 }
 
 QLabel#CheckerMessage{
-    background-color: rgb(35, 35, 35);
-    color: rgb(135, 135, 135);
-    font-size: 10px;
-    padding: 10px;
-    border-left: 4px solid rgb(55, 55, 55);
-    border-right: 4px solid rgb(55, 55, 55);
+    color: rgb(200, 200, 200);
+    font-size: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 QDockWidget{

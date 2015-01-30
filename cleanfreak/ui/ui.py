@@ -30,8 +30,18 @@ QProgressBar::chunk {{
 }}
 '''
 UNCHECKED = '''
-QWidget#CheckerListItem{background-color: rgb(50, 50, 50);}
-QWidget#CheckerListItem:hover{background-color: rgb(60, 60, 60);}
+QWidget#CheckerListItem{
+    background-color: rgb(50, 50, 50);
+    border-top: 1px solid rgb(65, 65, 65);
+    border-bottom: 1px solid rgb(35, 35, 35);}
+QWidget#CheckerListItem:hover{
+    background-color: rgb(60, 60, 60);
+    border-top: 1px solid rgb(75, 75, 75);
+    border-bottom: 1px solid rgb(45, 45, 45);}
+'''
+DEFAULT = '''
+QLabel#CheckerLabel{color: rgb(200, 200, 200);}
+QLabel#CheckerLabel:hover{color: rgb(235, 235, 235);}
 '''
 PASSED = '''
 QLabel#CheckerLabel{color: rgb(51, 190, 51);}
@@ -136,31 +146,44 @@ class CheckerListItem(QtGui.QWidget):
         self.setObjectName("CheckerListItem")
 
         self.grid = QtGui.QGridLayout()
-        self.grid.setContentsMargins(0, 0, 0, 0)
-        self.grid.setSpacing(0)
+        self.grid.setContentsMargins(20, 0, 20, 0)
+        self.grid.setColumnStretch(1, 1)
+        self.grid.setVerticalSpacing(0)
+        self.grid.setHorizontalSpacing(20)
         self.setLayout(self.grid)
 
+        self.toggle_box = QtGui.QCheckBox()
+        self.toggle_box.setChecked(True)
+        self.toggle_box.setObjectName("CheckerToggle")
+        self.toggle_box.stateChanged.connect(self.toggle_enabled)
         self.label = ClickableLabel()
         self.label.setObjectName("CheckerLabel")
-        self.label.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
+        self.label.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeft)
         self.label.clicked.connect(self.toggle_message)
         self.label.setFixedHeight(24)
         self.desc = ClickableLabel()
         self.desc.setObjectName("CheckerDesc")
-        self.desc.setAlignment(QtCore.Qt.AlignTop|QtCore.Qt.AlignHCenter)
+        self.desc.setAlignment(QtCore.Qt.AlignTop|QtCore.Qt.AlignLeft)
         self.desc.clicked.connect(self.toggle_message)
         self.desc.setFixedHeight(18)
+        self.select_button = QtGui.QPushButton()
+        self.select_button.setObjectName("CheckerSelect")
+        self.select_button.hide()
+        self.select_button.clicked.connect(self.checker.select)
+        self.select_button.setFixedSize(14, 14)
         self.message = QtGui.QLabel()
         self.message.setObjectName("CheckerMessage")
         self.message.setAlignment(
-            QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.message.setWordWrap(True)
         self.message.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
         self.message.hide()
 
-        self.grid.addWidget(self.label, 0, 0)
-        self.grid.addWidget(self.desc, 1, 0)
-        self.grid.addWidget(self.message, 2, 0)
+        self.grid.addWidget(self.toggle_box, 0, 0, 2, 1)
+        self.grid.addWidget(self.label, 0, 1)
+        self.grid.addWidget(self.desc, 1, 1)
+        self.grid.addWidget(self.select_button, 2, 0)
+        self.grid.addWidget(self.message, 2, 1)
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
     def toggle_message(self):
@@ -169,8 +192,15 @@ class CheckerListItem(QtGui.QWidget):
         if self.checker.msg:
             if msg_visible:
                 self.message.hide()
+                self.select_button.hide()
             else:
                 self.message.show()
+                if self.checker.selection:
+                    self.select_button.show()
+
+    def toggle_enabled(self, state):
+        self.checker.enabled = state
+        self.refr()
 
     def refr(self):
         '''Refresh item from checker.'''
@@ -178,6 +208,8 @@ class CheckerListItem(QtGui.QWidget):
         if self.checker.passed is not None:
             style = PASSED if self.checker.passed else FAILED
             self.setStyleSheet(style)
+        else:
+            self.setStyleSheet(DEFAULT)
         self.label.setText(self.checker.full_name)
         self.desc.setText(self.checker.description)
         self.message.setText(self.checker.msg)
@@ -233,20 +265,16 @@ class UI(QtGui.QDockWidget):
 
         self.top_grid = QtGui.QGridLayout()
         self.top_grid.setContentsMargins(0, 0, 0, 0)
-        self.top_grid.setRowStretch(1, 1)
+        self.top_grid.setRowStretch(2, 1)
         self.top_grid.setVerticalSpacing(0)
         self.widget.setLayout(self.top_grid)
 
         self.grid = QtGui.QGridLayout()
         self.grid.setContentsMargins(20, 20, 20, 20)
-        self.grid.setRowStretch(3, 1)
         self.grid.setSpacing(10)
 
         self.header = WindowHeader(REL('cleanfreak.png'))
         self.toolbar = Toolbar(self.widget)
-
-        self.top_grid.addWidget(self.toolbar, 0, 0)
-        self.top_grid.addLayout(self.grid, 1, 0)
 
         self.suite_label = QtGui.QLabel("Suite:")
         self.suite_label.setObjectName("Basic")
@@ -286,8 +314,10 @@ class UI(QtGui.QDockWidget):
         self.grid.addWidget(self.progress_grd, 0, 0)
         self.grid.addWidget(self.progress_bar, 1, 0)
         self.grid.addWidget(self.progress_msg, 2, 0)
-        self.grid.addWidget(self.checker_list, 3, 0)
 
+        self.top_grid.addWidget(self.toolbar, 0, 0)
+        self.top_grid.addLayout(self.grid, 1, 0)
+        self.top_grid.addWidget(self.checker_list, 2, 0)
 
         self.checker_items = {}
         self.context_opts.addItems(self.app.ctx["SUITES"].keys())

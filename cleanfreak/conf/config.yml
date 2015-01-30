@@ -43,17 +43,27 @@ CONTEXTS:
     MAYA:
         SUITES:
             MODEL:
-                - mayacheckers.References
-                - mayacheckers.IntermediateObjects
-                - mayacheckers.UngroupedGeo
+                - mayacheckers.AppliedShaders
+                - mayacheckers.DisplayLayers
+                - mayacheckers.ExtraCameras
                 - mayacheckers.HasUVs
+                - mayacheckers.IntermediateObjects
+                - mayacheckers.References
+                - mayacheckers.UnappliedShaders
+                - mayacheckers.UnappliedTextures
+                - mayacheckers.UngroupedGeo
             SHADE:
+                - mayacheckers.MeshesHaveMaterialIDs
                 - mayacheckers.References
             RIG:
                 - mayacheckers.References
+                - mayacheckers.UngroupedGeo
             LIGHT:
                 - mayacheckers.References
             ANIMATE:
+                - mayacheckers.CameraName
                 - mayacheckers.References
+            LAYOUT:
+                - mayacheckers.MeshesHaveMaterialIDs
             DEFAULT: "MODEL"
         UI: "MAYA"

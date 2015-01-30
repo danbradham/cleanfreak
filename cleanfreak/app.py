@@ -91,7 +91,6 @@ class CleanFreak(object):
 
         self.checkers = None
         self.suite = None
-        self.checker_count = 0
         self.ui = None
         self._grade = None
         self.checked = False
@@ -117,9 +116,10 @@ class CleanFreak(object):
         shout(StartChecker, 'Running Checks...')
 
         for c in self.checkers:
-            c._check()
-            grade = Grade.create(self)
-            shout(OnCheck, c, grade)
+            if c.enabled:
+                c._check()
+                grade = Grade.create(self)
+                shout(OnCheck, c, grade)
 
         self._grade = Grade.create(self)
         self.checked = True
@@ -142,9 +142,10 @@ class CleanFreak(object):
         shout(StartChecker, 'Running Fixes...')
 
         for c in self.checkers:
-            c._fix()
-            grade = Grade.create(self)
-            shout(OnFix, c, grade)
+            if c.enabled:
+                c._fix()
+                grade = Grade.create(self)
+                shout(OnFix, c, grade)
 
         self._grade = Grade.create(self)
         shout(FinishChecker, self._grade)
@@ -163,7 +164,6 @@ class CleanFreak(object):
         self.suite_name = suite
         self.suite = self.ctx['SUITES'][suite]
         self.checkers = collect(self.suite)
-        self.checker_count = len(self.checkers)
         self.checked = False
         shout(SuiteSet)
 
@@ -171,6 +171,15 @@ class CleanFreak(object):
         '''Returns a list suite names.'''
 
         return self.ctx['SUITES'].keys()
+
+    @property
+    def checker_count(self):
+        i = 0
+        for c in self.checkers:
+            if c.enabled:
+                i += 1
+        return i
+
 
     @property
     def successes(self):

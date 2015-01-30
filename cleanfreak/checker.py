@@ -24,14 +24,23 @@ class Checker(ABC):
     fix_msg = 'Fixed!'
 
     def __init__(self):
-        self.passed = None
-        self.fixed = False
-        self.msg = None
+        self._reset()
+        self._enabled = True
 
     def _reset(self):
         self.passed = None
         self.fixed = False
         self.msg = None
+        self.selection = []
+
+    @property
+    def enabled(self):
+        return self._enabled
+
+    @enabled.setter
+    def enabled(self, value):
+        self._reset()
+        self._enabled = value
 
     def _check(self):
         '''This is a private method, do not override. Only :class:`CleanFreak`
@@ -41,13 +50,13 @@ class Checker(ABC):
         :meth:`check` s return value is bound to self.passed and self.msg'''
 
         try:
+            self._reset()
             self.setup()
             self.passed, msg = self.check()
             if not self.fixed:
                 self.msg = msg
         except:
-            self.msg = traceback.format_exc()
-            self.passed = False
+            self.passed, self.msg = False, traceback.format_exc()
         return self.passed, self.msg
 
     def _fix(self):
@@ -64,14 +73,13 @@ class Checker(ABC):
         try:
             self.fixed, self.msg = self.fix()
         except:
-            self.msg = traceback.format_exc()
-            self.fixed = False
+            self.fixed, self.msg = False, traceback.format_exc()
         return self.fixed, self.msg
 
-    @abstractmethod
     def setup(self):
-        '''Called prior to running Checker's check method. Includes any
-        relevant imports and default values for attributes.
+        '''OPTIONAL METHOD: Called prior to running Checker's check method.
+        Includes any relevant default values for attributes. Override if your
+        checker requires some sort of setup.
 
         ::
 
@@ -103,6 +111,7 @@ class Checker(ABC):
         '''Attempt to fix the issue check found.
 
         ::
+
             if self.passed:
                 return
 
@@ -110,4 +119,14 @@ class Checker(ABC):
                 automatic_map(node)
 
             return True, self.msg
+        '''
+
+    @abstractmethod
+    def select(self):
+        '''Select the objects in Checker.selection that caused a failure.
+
+        ::
+            import pymel.core as pm
+            pm.select(self.selection)
+
         '''
