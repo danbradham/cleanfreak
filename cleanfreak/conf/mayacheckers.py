@@ -3,14 +3,14 @@ import pymel.core as pm
 from cleanfreak.checker import Checker
 
 
-class MayaChecker(Checker):
+class MayaSelectMixin(object):
 
     def select(self):
         if self.selection:
             pm.select(self.selection)
 
 
-class References(MayaChecker):
+class References(MayaSelectMixin, Checker):
 
     full_name = "References"
     description = "Checks for references, we want a flat scene."
@@ -40,7 +40,7 @@ class References(MayaChecker):
         return True, msg
 
 
-class IntermediateObjects(MayaChecker):
+class IntermediateObjects(MayaSelectMixin, Checker):
 
     full_name = "Intermediate Objects"
     description = "Stranded intermediate objects (hidden shape nodes)."
@@ -76,7 +76,7 @@ class IntermediateObjects(MayaChecker):
         return True, msg
 
 
-class UngroupedGeo(MayaChecker):
+class UngroupedGeo(MayaSelectMixin, Checker):
 
     full_name = "Ungrouped Geometry"
     description = "Top-level geometry, we'll have none of that."
@@ -109,7 +109,7 @@ class UngroupedGeo(MayaChecker):
         return True, msg
 
 
-class HasUVs(MayaChecker):
+class HasUVs(MayaSelectMixin, Checker):
 
     full_name = "Has UVs"
     description = "Check if all meshes have UVs"
@@ -144,7 +144,7 @@ class HasUVs(MayaChecker):
         return True, msg
 
 
-class ExtraCameras(MayaChecker):
+class ExtraCameras(MayaSelectMixin, Checker):
 
     full_name = "Extra Cameras"
     description = "Check for non-default cameras"
@@ -183,7 +183,7 @@ class ExtraCameras(MayaChecker):
         return True, msg
 
 
-class DisplayLayers(MayaChecker):
+class DisplayLayers(MayaSelectMixin, Checker):
 
     full_name = "Display Layers"
     description = "Check for display layers"
@@ -219,7 +219,7 @@ class DisplayLayers(MayaChecker):
         return True, msg
 
 
-class UnappliedTextures(MayaChecker):
+class UnappliedTextures(MayaSelectMixin, Checker):
 
     full_name = "Unapplied Textures"
     description = "Check for unapplied textures."
@@ -257,7 +257,7 @@ class UnappliedTextures(MayaChecker):
         return True, msg
 
 
-class UnappliedShaders(MayaChecker):
+class UnappliedShaders(MayaSelectMixin, Checker):
 
     full_name = "Unapplied Shaders"
     description = "Check for unapplied shaders."
@@ -301,7 +301,7 @@ class UnappliedShaders(MayaChecker):
         return True, msg
 
 
-class AppliedShaders(MayaChecker):
+class AppliedShaders(MayaSelectMixin, Checker):
 
     full_name = "Applied Shaders"
     description = "Check for applied shaders."
@@ -340,7 +340,7 @@ class AppliedShaders(MayaChecker):
         return False, msg
 
 
-class CameraName(MayaChecker):
+class CameraName(MayaSelectMixin, Checker):
 
     full_name = "Camera Name"
     description = "Check for properly named camera."
@@ -365,7 +365,7 @@ class CameraName(MayaChecker):
         return self.fix_msg.format(self.camera_name)
 
 
-class MeshesHaveMaterialIDs(MayaChecker):
+class MeshesHaveMaterialIDs(MayaSelectMixin, Checker):
 
     full_name = 'Meshes Have Material IDs'
     description = 'Make sure all mesh objects have a material ID attribute'
