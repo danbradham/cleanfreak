@@ -12,14 +12,19 @@ if sys.argv[-1] == 'cheeseit!':
     sys.exit()
 
 
+if sys.argv[-1] == 'testit!':
+    os.system('python setup.py sdist upload -r test')
+    sys.exit()
+
+
 packages = [
     'cleanfreak',
-    'cleanfreak.ui'
+    'cleanfreak.ui',
 ]
 
 package_data = {
     '': ['LICENSE', 'README'],
-    'cleanfreak': ['conf/*.*']
+    'cleanfreak': ['conf/*.*'],
 }
 
 

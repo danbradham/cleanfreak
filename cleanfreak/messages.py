@@ -1,6 +1,14 @@
 from .shout import Message
 
 
+class ConfigChanged(Message):
+    '''Shouted when a Config file is changed.'''
+
+
+class ContextChanged(Message):
+    '''Shouted when an apps context changes'''
+
+
 class StartChecker(Message):
     '''Shouted prior to running checks or cleans.'''
 
@@ -23,6 +31,7 @@ class CheckFirst(Message):
 
 class SuiteSet(Message):
     '''Shouted when suite changed.'''
+
 
 class Started(Message):
     '''Emitted on instancing CleanFreak'''

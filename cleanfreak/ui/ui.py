@@ -7,8 +7,8 @@ from PySide import QtGui, QtCore
 import sys
 import os
 from functools import partial
-from ..messages import (
-    StartChecker, FinishChecker, OnCheck, OnFix, CheckFirst, SuiteSet)
+from ..messages import (StartChecker, FinishChecker, OnCheck, OnFix,
+                        CheckFirst, SuiteSet, ContextChanged)
 from ..shout import has_ears, hears
 
 
@@ -320,15 +320,20 @@ class UI(QtGui.QDockWidget):
         self.top_grid.addWidget(self.checker_list, 2, 0)
 
         self.checker_items = {}
-        self.context_opts.addItems(self.app.ctx["SUITES"].keys())
-        self.context_opts.currentIndexChanged.connect(self.set_context)
         self.load_context()
+        self.context_opts.activated.connect(self.set_context)
 
         with open(REL("style.css")) as f:
             self.setStyleSheet(f.read())
 
-    @hears(SuiteSet)
+    @hears(ContextChanged)
     def load_context(self):
+        self.context_opts.clear()
+        self.context_opts.addItems(self.app.list_suites())
+        self.load_suite()
+
+    @hears(SuiteSet)
+    def load_suite(self):
         if self.checker_items:
             for ci in self.checker_items.values():
                 ci.setParent(None)
@@ -350,7 +355,8 @@ class UI(QtGui.QDockWidget):
         self.refr()
 
     def set_context(self):
-        self.app.set_suite(self.context_opts.currentText())
+        suite_name = self.context_opts.currentText()
+        self.app.set_suite(suite_name)
 
     @hears(StartChecker)
     def start_checker(self, message):

@@ -3,11 +3,12 @@ from functools import partial
 import os
 import random
 import shutil
-from .config import Config, load_yaml
+from .config import Config
 from .utils import collect
 from .messages import (StartChecker, FinishChecker, OnCheck, OnFix,
-                       CheckFirst, SuiteSet, Started)
-from .shout import shout
+                       CheckFirst, SuiteSet, Started, ContextChanged,
+                       ConfigChanged)
+from .shout import shout, has_ears, hears
 
 
 rel_path = partial(os.path.join, os.path.dirname(__file__))
@@ -57,12 +58,12 @@ class Grade(object):
         return grade
 
 
+@has_ears
 class CleanFreak(object):
     ''':class:`CleanFreak` collects and runs :class:`Checker` :meth:`check`
     and :meth:`fix` methods based on the config file in your configuration
     root directory. Configuration root is looked up in the following order.
 
-     * Parameter cfg_root passed to CleanFreak on instantiation
      * Environment variable CLEANFREAK_CFG
      * ~/cleanfreak
 
@@ -72,33 +73,21 @@ class CleanFreak(object):
     allowing you to load python modules from there. This is the best place to
     keep a module containing :class:`Checker` objects.
 
-    :param cfg_root: Optional configuration root directory.'''
+    :param context: Parent application context'''
 
-    def __init__(self, context=None, cfg_root=None):
+    defaults = {}
 
-        self.config = Config()
+    def __init__(self, context=None):
 
-        if cfg_root:
-            os.environ['CLEANFREAK_CFG'] = cfg_root
-        else:
-            cfg_root = os.environ.setdefault(
-            'CLEANFREAK_CFG', os.path.expanduser('~/cleanfreak'))
-
-        if not os.path.exists(cfg_root):
-            shutil.copytree(rel_path('conf'), cfg_root)
-
-        self.config.from_env('CLEANFREAK_CFG')
+        self.config = Config(**self.defaults)
 
         self.checkers = None
         self.suite = None
         self.ui = None
         self._grade = None
         self.checked = False
-
-        self.ctx = self.config['CONTEXTS'][context]
-        if "DEFAULT" in self.ctx.get('SUITES', []):
-            suite = self.ctx['SUITES'].pop('DEFAULT')
-            self.set_suite(suite)
+        self.set_context(context)
+        self.set_suite()
 
         shout(Started, self)
 
@@ -151,12 +140,26 @@ class CleanFreak(object):
         shout(FinishChecker, self._grade)
         self.run_checks()
 
-    def set_suite(self, suite):
+    def set_context(self, context):
+        self._context = context
+        self.default_suite = self.ctx['SUITES'].pop('DEFAULT')
+        shout(ContextChanged)
+
+    def get_context(self):
+        return self.config['CONTEXTS'][self._context]
+
+    def set_suite(self, suite=None):
         '''Sets the suite to the specified value. Collects all checkers listed
         in the suites configuration. Raises a KeyError if the squite is not in
         your configuration.
 
         :param suite: The key of your suite in config['SUITES']'''
+
+        if suite is None:
+            try:
+                suite = self.default_suite
+            except KeyError:
+                raise KeyError('No default suite set in config')
 
         if not suite in self.ctx['SUITES']:
             raise KeyError('Unconfigured suite: {0}'.format(suite))
@@ -172,6 +175,15 @@ class CleanFreak(object):
 
         return self.ctx['SUITES'].keys()
 
+    @hears(ConfigChanged)
+    def config_changed(self):
+        self.set_context(self._context)
+        self.set_suite(self.suite_name)
+
+    @property
+    def ctx(self):
+        return self.get_context()
+
     @property
     def checker_count(self):
         i = 0
@@ -179,7 +191,6 @@ class CleanFreak(object):
             if c.enabled:
                 i += 1
         return i
-
 
     @property
     def successes(self):

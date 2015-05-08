@@ -1,28 +1,30 @@
 from cleanfreak.checker import Checker
 
-class A(Checker):
+
+class TestChecker(Checker):
+
+    def select(self):
+        print 'selection'
+
+
+class A(TestChecker):
 
     full_name = "Checker A"
     description = "My awesome Checker A!"
 
-    def setup(self):
-        print "A Setup"
 
     def check(self):
         return True, "A Check: SUCCESS!"
 
     def fix(self):
-        print "A fix"
         return True, "A Fix: FIXED!"
 
 
-class B(Checker):
+class B(TestChecker):
 
     full_name = "Checker B"
     description = "My awesome Checker B!"
 
-    def setup(self):
-        print "B Setup"
 
     def check(self):
         return True, "B Check: SUCCESS!"
@@ -31,14 +33,10 @@ class B(Checker):
         return True, "B Fix: FIXED!"
 
 
-class C(Checker):
+class C(TestChecker):
 
     full_name = "Checker C"
     description = "My awesome Checker C!"
-
-    def setup(self):
-
-        print "C Setup"
 
     def check(self):
         raise Exception("Crazy super exception")
@@ -48,13 +46,11 @@ class C(Checker):
         return True, "C Fix: FIXED!"
 
 
-class D(Checker):
+class D(TestChecker):
 
     full_name = "Checker D"
     description = "My awesome Checker D!"
 
-    def setup(self):
-        print "D Setup"
 
     def check(self):
         return True, "D Check: SUCCESS!"
@@ -63,13 +59,11 @@ class D(Checker):
         return False, "D Fix: FIXED!"
 
 
-class E(Checker):
+class E(TestChecker):
 
     full_name = "Checker E"
     description = "My awesome Checker E!"
 
-    def setup(self):
-        print "E Setup"
 
     def check(self):
         if self.fixed:
@@ -80,13 +74,11 @@ class E(Checker):
         return True, "E Fix: FIXED!"
 
 
-class F(Checker):
+class F(TestChecker):
 
     full_name = "Checker F"
     description = "My awesome Checker F!"
 
-    def setup(self):
-        print "F Setup"
 
     def check(self):
         return False, "F Check: FAIL!"
@@ -95,14 +87,10 @@ class F(Checker):
         return False, "F Fix: FIX FAIL!"
 
 
-class G(Checker):
+class G(TestChecker):
 
     full_name = "Checker G"
     description = "My awesome Checker G!"
-
-    def setup(self):
-
-        print "G Setup"
 
     def check(self):
         return False, "G Check: FAIL!"
@@ -111,13 +99,11 @@ class G(Checker):
         return True, "G Fix: FIXED!"
 
 
-class H(Checker):
+class H(TestChecker):
 
     full_name = "Checker H"
     description = "My awesome Checker H!"
 
-    def setup(self):
-        print "H Setup"
 
     def check(self):
         return True, "H Check: SUCCESS!"
@@ -126,13 +112,11 @@ class H(Checker):
         return False, "H Fix: FIXED!"
 
 
-class I(Checker):
+class I(TestChecker):
 
     full_name = "Checker I"
     description = "My awesome Checker I!"
 
-    def setup(self):
-        print "I Setup"
 
     def check(self):
         if self.fixed:
@@ -143,13 +127,11 @@ class I(Checker):
         return True, "I Fix: FIXED!"
 
 
-class J(Checker):
+class J(TestChecker):
 
     full_name = "Checker J"
     description = "My awesome Checker J!"
 
-    def setup(self):
-        print "J Setup"
 
     def check(self):
         return True, "J Check: SUCCESS!"
